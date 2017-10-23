@@ -1,2 +1,2 @@
-# air-list
+# Air List
 AirBnB Analyzer
