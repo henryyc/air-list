@@ -16,6 +16,8 @@ function initMap() {
   };
   var map = new google.maps.Map(document.getElementById("map"),
     myOptions);//elementbyid map is null
+
+  alert("MAP CREATED LUL");
 }
 
 this.graph = function(listing) {
