@@ -6,7 +6,7 @@ var reviews;
 var request = require('request');
 var $ = jQuery = require('jquery');
 
-require('./public/js/jquery.csv.js');
+require('./jquery.csv.js');
 
 request.get('https://raw.githubusercontent.com/henryyc/air-list/master/data/calendar.csv', function(error, response, body) {
   if (!error && response.statusCode == 200) {
@@ -21,7 +21,7 @@ function lists(calendar) {
       listings = body;
 
       //var GoogleMapsAPI = require('googlemaps');
-      require('./public/js/graphs.js')();
+      require('./graphs.js')();
       initMap();
 
       //go through the csv line by line to graph the markers one by one
