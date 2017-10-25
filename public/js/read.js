@@ -6,6 +6,8 @@ var reviews;
 var request = require('request');
 var $ = jQuery = require('jquery');
 
+global.setImmediate = require('timers').setImmediate;
+
 require('./jquery.csv.js');
 
 request.get('https://raw.githubusercontent.com/henryyc/air-list/master/data/calendar.csv', function(error, response, body) {
@@ -35,7 +37,7 @@ function lists(calendar) {
         })
         .on("data", function(data) {
           //console.log(data);
-          graph(data);
+          addMarker(data);
         })
         .on("end", function() {
           console.log("done");
