@@ -3236,6 +3236,7 @@
 
 				.wrapper > .inner {
 					width: 100%;
+					height: 30%;
 				}
 
 			}
@@ -3247,6 +3248,11 @@
 				}
 
 			}
+
+			.wrapper > .inner > .map_viz {
+				width: 80%;
+				height: 30%;
+				}/*MAP EDIT HYC*/
 
 		.wrapper.alt {
 			background-color: #261c3e;

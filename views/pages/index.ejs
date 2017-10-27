@@ -40,9 +40,10 @@
     <section id="one" class="wrapper style2 fullscreen fade-up">
       <div class="inner">
         <h2>Cost</h2>
-        <p>Heatmap of San Francisco, based off average price of an AirBnB in each location. (replace with real map later lul)</p>
+        <p>Heatmap of San Francisco, based off average price of an AirBnB in each location.</p>
 
-        <img src="https://raw.githubusercontent.com/henryyc/air-list/master/images/temo.png" alt="heatmap"><br>
+        <div id="cost_map" style="width:500px; height:300px">Please wait, map is loading...</div>
+        <br><br><br><br>
 
         <ul class="actions">
           <li><a href="#two" class="button scrolly">Next</a></li>
@@ -93,12 +94,13 @@
     </section>
 
     <!-- Three -->
-    <section id="three" class="wrapper style1 fullscreen fade-up">
+    <section id="three" class="wrapper style1 fullscreen fade-up" style="height:100%; width:100%;">
       <div class="inner">
         <h2>View Current Listings</h2>
-        <p>Click on a marker to see listing data</p>
+        <p>Click on a marker to see listing data </p>
 
-        <div id="map"></div>
+        <div id="listings_map">Please wait, map is loading...</div>
+        <br><br><br><br>
 
         <script src="/js/bundleRead.js"></script>
 
@@ -119,9 +121,9 @@
           <input id="autocomplete" placeholder="Enter your address" onFocus="geolocate()" type="text"></input>
         </div>
 
-        <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDkz70GPVG_cUhCLbmDg8VfHkiVGZ7KI6U&libraries=places&callback=initAutocomplete"></script>
+        <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDkz70GPVG_cUhCLbmDg8VfHkiVGZ7KI6U&libraries=visualization,places&callback=initAutocomplete"></script>
 
-          <!--<table class="alt">
+        <!--<table class="alt">
             <td>Daily Rate:</td>
             <td><div id="tablePrice">n/a</div></td>
           </table>-->

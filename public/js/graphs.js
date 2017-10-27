@@ -1,34 +1,65 @@
 /* graphs all listings with markers onto google maps */
 module.exports = function() {
 
-  var map;
+  var costMap;
+  var listingsMap;
   var geocoder;
   this.initMap = function() {
-    /*map = new google.maps.Map(document.getElementById('map'), {
-      zoom: 15,
-      center: new google.maps.LatLng(37.7749, 122.4194),
-    });*/
 
-    var latlng = new google.maps.LatLng(37.7749, 122.4194);
-    var myOptions = {
+    costMap = new google.maps.Map(document.getElementById('cost_map'), {
       zoom: 15,
-      center: latlng
-    };
-    map = new google.maps.Map(document.getElementById("map"),
-      myOptions); //elementbyid map is null
+      center: new google.maps.LatLng(37.7749, -122.4194),
+    });
 
-    alert("MAP CREATED LUL");
+    listingsMap = new google.maps.Map(document.getElementById('listings_map'), {
+      zoom: 15,
+      center: new google.maps.LatLng(37.7749, -122.4194),
+    });
+
+    console.log("initial maps created");
   }
 
-  this.addMarker = function(listing) {
+  this.addHeat = function(lat, long, price, heatmapData, complete) {
+
+    //if dataset is complete
+    if (complete) {
+
+      var heatmap = new google.maps.visualization.HeatmapLayer({
+        data: heatmapData
+      })
+
+      heatmap.setMap(costMap);
+      console.log("heat costs layered");
+    }
+
+    //continue adding to dataset
+    else {
+      //FIX WEIGHT LATER
+      //var weight = new google.maps.visualization.WeightedLocation(new google.maps.LatLng(lat, long), +price);
+      var weight = new google.maps.LatLng(lat, long);
+      heatmapData.push(weight);
+    }
+  }
+
+  this.addMarker = function(lat, long) {
 
     //console.log(listing);
     geocoder = new google.maps.Geocoder();
 
-    //from excel: AW-lat, AX-long
-    var lat = listing[49];
-    var long = listing[50];
-    var latLng = new google.maps.LatLng(lat, long);
+    var contentString = "banana";
+    var infowindow = new google.maps.InfoWindow({
+      content: contentString
+    });
+
+    var marker = new google.maps.Marker({
+      position: new google.maps.LatLng(lat, long),
+      map: listingsMap,
+      title: 'Fruit'
+    });
+    marker.addListener('click', function() {
+      infowindow.open(listingsMap, marker);
+    });
+
 
     /*geocoder.geocode({
       'address': childData.Location

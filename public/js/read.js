@@ -28,6 +28,7 @@ function lists(calendar) {
 
       //go through the csv line by line to graph the markers one by one
       var csv = require("fast-csv");
+      var heatmapData = [];
 
       var CSV_STRING = body;
 
@@ -36,11 +37,19 @@ function lists(calendar) {
           headers: true
         })
         .on("data", function(data) {
-          //console.log(data);
-          addMarker(data);
+          var lat = data["latitude"];
+          var long = data["longitude"];
+          var price = data["price"];
+        /*  var weight = google.maps.visualization.WeightedLocation(new google.maps.LatLng(lat, long), price);
+          heatmapData.push(weight);*/
+
+          addHeat(lat, long, price, heatmapData, false)
+          addMarker(lat, long)
         })
         .on("end", function() {
-          console.log("done");
+          //addHeat(heatmapData);
+          addHeat(0, 0, 0, heatmapData, true);
+          console.log("data finished being sent");
         });
 
       neighbours(calendar, listings);
