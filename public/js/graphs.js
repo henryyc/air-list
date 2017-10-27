@@ -4,6 +4,8 @@ module.exports = function() {
   var costMap;
   var listingsMap;
   var geocoder;
+
+  //create a default cost map and listings map
   this.initMap = function() {
 
     costMap = new google.maps.Map(document.getElementById('cost_map'), {
@@ -19,6 +21,7 @@ module.exports = function() {
     console.log("initial maps created");
   }
 
+  //create heatmap layer for cost map
   this.addHeat = function(lat, long, price, heatmapData, complete) {
 
     //if dataset is complete
@@ -34,13 +37,14 @@ module.exports = function() {
 
     //continue adding to dataset
     else {
-      //FIX WEIGHT LATER
+      //FIX WEIGHT bruh
       //var weight = new google.maps.visualization.WeightedLocation(new google.maps.LatLng(lat, long), +price);
       var weight = new google.maps.LatLng(lat, long);
       heatmapData.push(weight);
     }
   }
 
+  //add a marker to listing map
   this.addMarker = function(lat, long) {
 
     //console.log(listing);
@@ -48,7 +52,7 @@ module.exports = function() {
 
     var contentString = "banana";
     var infowindow = new google.maps.InfoWindow({
-      content: contentString
+      content: contentString//this shit dont work
     });
 
     var marker = new google.maps.Marker({
@@ -59,30 +63,6 @@ module.exports = function() {
     marker.addListener('click', function() {
       infowindow.open(listingsMap, marker);
     });
-
-
-    /*geocoder.geocode({
-      'address': childData.Location
-    }, function(results, status) {
-      if (status === 'OK') {
-        var latlong = results[0].geometry.location;
-        var marker = new google.maps.Marker({
-          map: map,
-          position: latlong
-        });
-        google.maps.event.addListener(marker, 'click', (function(marker, i) {
-          return function() {
-
-            infowindowContent = '<h4>' + childData.Event + ' with ' + childData.Company + '</h4>' +
-              '<p>' + childData.Time + ' at ' + childData.Location + '</p><p><i>' + childData.Tags + '</i></p>';
-            infowindow.setContent(infowindowContent);
-            infowindow.open(map, this);
-          }
-        })(marker, i))
-      } else {
-        alert('Geocode was not successful for the following reason: ' + status);
-      }
-    });*/
   }
 
 }

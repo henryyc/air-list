@@ -27,30 +27,24 @@
     <section id="intro" class="wrapper style1 fullscreen fade-up">
       <div class="inner">
         <h1>Air List</h1>
-        <!--<p>Just another fine responsive site template designed by <a href="http://html5up.net">HTML5 UP</a><br />
-        and released for free under the <a href="http://html5up.net/license">Creative Commons</a>.</p>-->
         <p>Visualize AirBnB data from San Francisco to maximize your own renting profit and make smarter investments.</p>
         <ul class="actions">
-          <li><a href="#one" class="button scrolly">Learn more</a></li>
+          <li><div id ="welcome" a href="#one" class="button scrolly">Learn More</a></li>
         </ul>
       </div>
     </section>
 
-    <!-- One -->
+    <!-- One/cost -->
     <section id="one" class="wrapper style2 fullscreen fade-up">
       <div class="inner">
         <h2>Cost</h2>
         <p>Heatmap of San Francisco, based off average price of an AirBnB in each location.</p>
 
-        <div id="cost_map" style="width:800px; height:600px">Please wait, map is loading...</div>
+        <div id="cost_map" style="width:80%; height:100%; position: absolute">Please wait, map is loading...</div>
         <br><br>
-
-        <ul class="actions">
-          <li><a href="#two" class="button scrolly">Next</a></li>
-        </ul>
     </section>
 
-    <!-- Two -->
+    <!-- Two/to-do -->
     <section id="two" class="wrapper style3 fade-up">
       <div class="inner">
         <h2>What we do</h2>
@@ -87,31 +81,24 @@
             <p>Phasellus convallis elit id ullam corper amet et pulvinar. Duis aliquam turpis mauris, sed ultricies erat dapibus.</p>
           </section>
         </div>
-        <ul class="actions">
-          <li><a href="#three" class="button scrolly">Next</a></li>
-        </ul>
       </div>
     </section>
 
-    <!-- Three -->
-    <section id="three" class="wrapper style1 fullscreen fade-up" style="height:100%; width:100%;">
+    <!-- Three/listings -->
+    <section id="three" class="wrapper style1 fullscreen fade-up">
       <div class="inner">
         <h2>View Current Listings</h2>
         <p>Click on a marker to see listing data </p>
 
-        <div id="listings_map" style="width:800px; height:600px">Please wait, map is loading...</div>
+        <div id="listings_map" style="width:80%; height:100%; position: absolute">Please wait, map is loading...</div>
         <br><br>
 
         <script src="/js/bundleRead.js"></script>
 
-
-        <ul class="actions">
-          <li><a href="#four" class="button scrolly">Next</a></li>
-        </ul>
       </div>
     </section>
 
-    <!-- Four -->
+    <!-- Four/calculator -->
     <section id="four" class="wrapper style2 fullscreen fade-up">
       <div class="inner">
         <h2>Estimator</h2>
@@ -122,11 +109,6 @@
         </div>
 
         <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDkz70GPVG_cUhCLbmDg8VfHkiVGZ7KI6U&libraries=visualization,places&callback=initAutocomplete"></script>
-
-        <!--<table class="alt">
-            <td>Daily Rate:</td>
-            <td><div id="tablePrice">n/a</div></td>
-          </table>-->
 
         <br><br><pre><code>Recommended Daily Rate:<div id="tablePrice">n/a</div></code></pre>
       </div>

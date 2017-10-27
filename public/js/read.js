@@ -49,7 +49,7 @@ function lists(calendar) {
         .on("end", function() {
           //addHeat(heatmapData);
           addHeat(0, 0, 0, heatmapData, true);
-          console.log("data finished being sent");
+          console.log("listing data finished being sent");
         });
 
       neighbours(calendar, listings);
