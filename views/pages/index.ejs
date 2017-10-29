@@ -28,6 +28,7 @@
       <div class="inner">
         <h1>Air List</h1>
         <p>Visualize AirBnB data from San Francisco to maximize your own renting profit and make smarter investments.</p>
+        <p><span id="loadPercent">Page is loading...0%</span></p>
         <ul class="actions">
           <li><div id ="welcome" a href="#one" class="button scrolly">Learn More</a></li>
         </ul>
@@ -36,11 +37,13 @@
 
     <!-- One/cost -->
     <section id="one" class="wrapper style2 fullscreen fade-up">
+
       <div class="inner">
+        <div id="cost_map" style="width:80%; height:50%; position:absolute">Please wait, map is loading...</div>
+        <br><br><br><br><br><br><br><br><br><br><br><br><br><br>
+
         <h2>Cost</h2>
         <p>Heatmap of San Francisco, based off average price of an AirBnB in each location.</p>
-
-        <div id="cost_map" style="width:80%; height:100%; position: absolute">Please wait, map is loading...</div>
         <br><br>
     </section>
 
@@ -87,10 +90,13 @@
     <!-- Three/listings -->
     <section id="three" class="wrapper style1 fullscreen fade-up">
       <div class="inner">
+
+        <div id="listings_map" style="width:80%; height:50%; position: absolute">Please wait, map is loading...</div>
+        <br><br><br><br><br><br><br><br><br><br><br><br><br><br>
+
         <h2>View Current Listings</h2>
         <p>Click on a marker to see listing data </p>
 
-        <div id="listings_map" style="width:80%; height:100%; position: absolute">Please wait, map is loading...</div>
         <br><br>
 
         <script src="/js/bundleRead.js"></script>

@@ -33,6 +33,7 @@ module.exports = function() {
 
       heatmap.setMap(costMap);
       console.log("heat costs layered");
+      document.getElementById('loadPercent').innerHTML = 'Done!';
     }
 
     //continue adding to dataset
@@ -64,5 +65,4 @@ module.exports = function() {
       infowindow.open(listingsMap, marker);
     });
   }
-
 }
