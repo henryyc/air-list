@@ -13,58 +13,22 @@ require('./jquery.csv.js');
 request.get('https://raw.githubusercontent.com/henryyc/air-list/master/data/calendar.csv', function(error, response, body) {
   if (!error && response.statusCode == 200) {
     calendar = body;
-    neighbours(calendar);
+    lists(calendar);
   }
 });
 
-function neighbours(calendar) {
-  request.get('https://raw.githubusercontent.com/henryyc/air-list/master/data/neighbourhoods.csv', function(error, response, body) {
-    if (!error && response.statusCode == 200) {
-      neighbourhoods = body;
-
-      var csv = require("fast-csv");
-      var heatmapData = [];
-
-      var CSV_STRING = body;
-      var xAxis = [];
-      var i = 0;
-
-      csv
-        .fromString(CSV_STRING, {
-          headers: true
-        })
-        .on("data", function(data) {
-          xAxis.push(data["neighbourhood"]);
-          xAxis[i] = [];
-          i++;
-        })
-        .on("end", function() {
-
-          console.log("calendar data finished being sent");
-        });
-
-      lists(calendar, xAxis, neighbourhoods);
-    }
-  });
-}
-
-function lists(calendar, xAxis, neighbourhoods) {
+function lists(calendar) {
   request.get('https://raw.githubusercontent.com/henryyc/air-list/master/data/listings.csv', function(error, response, body) {
     if (!error && response.statusCode == 200) {
       listings = body;
 
+      //var GoogleMapsAPI = require('googlemaps');
       require('./graphs.js')();
       initMap();
 
       //go through the csv line by line to graph the markers one by one
       var csv = require("fast-csv");
       var heatmapData = [];
-      var priceData = new Array(xAxis.length); //keep track of price for each neighbourhood
-      var priceFreq = new Array(xAxis.length); //keep track of number of listings in each neighbourhood
-      for(var i = 0; i < priceData.length; i++){
-        priceData[i] = 0;
-        priceFreq[i] = 0;
-      }
 
       var CSV_STRING = body;
 
@@ -75,29 +39,28 @@ function lists(calendar, xAxis, neighbourhoods) {
         .on("data", function(data) {
           var lat = data["latitude"];
           var long = data["longitude"];
-          var price = parseFloat(data["price"].substring(1));
-          console.log(price);
-
-          //add to basic price statistics
-          var neighbourhood = data["host_neighbourhood"];
-          for(var i = 0; i < xAxis.length; i++){
-            if(xAxis[i] == neighbourhood){
-              //substr by 1 to get rid of dollar sign
-              priceData[i] += price;
-              priceFreq[i]++;
-              i = xAxis.length;
-            }
-          }
+          var price = data["price"];
+        /*  var weight = google.maps.visualization.WeightedLocation(new google.maps.LatLng(lat, long), price);
+          heatmapData.push(weight);*/
 
           addHeat(lat, long, price, heatmapData, false)
-          addMarker(data)
+          addMarker(lat, long)
         })
         .on("end", function() {
-          graphPrices(xAxis, priceData, priceFreq);
+          //addHeat(heatmapData);
           addHeat(0, 0, 0, heatmapData, true);
-          console.log("listing and price data finished being sent");
+          console.log("listing data finished being sent");
         });
 
+      neighbours(calendar, listings);
+    }
+  });
+}
+
+function neighbours(calendar, listings) {
+  request.get('https://raw.githubusercontent.com/henryyc/air-list/master/data/neighbourhoods.csv', function(error, response, body) {
+    if (!error && response.statusCode == 200) {
+      neighbourhoods = body;
       finalFile(calendar, listings, neighbourhoods);
     }
   });

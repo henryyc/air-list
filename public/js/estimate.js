@@ -20,10 +20,8 @@ function calculateCost() {
   alert(latLong);
 
   var cost = 0;
-  var costTwo = 0;
 
   document.getElementById("tablePrice").innerHTML = '$' + parseFloat(Math.round(cost * 100) / 100).toFixed(2);
-  document.getElementById("tablePriceTwo").innerHTML = '$' + parseFloat(Math.round(costTwo * 100) / 100).toFixed(2);
 }
 
 // Bias the autocomplete object to the user's geographical location,
