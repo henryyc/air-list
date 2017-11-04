@@ -26,12 +26,11 @@ module.exports = function() {
 
     var freq = new Array(horiAxis.length);
     for (var i = 0; i < freq.length; i++){
-       freq[i] = priceData[i] ;/// priceFreq[i];
-
-      //if(priceFreq[i] == 0)
-        //console.log("lmao oops");
-      //freq[i] = 4;
+       freq[i] = priceData[i]/priceFreq[i];
+       console.log(freq[i]);
     }
+
+    //insert d3 graph
 
     console.log("cost graph created");
   }

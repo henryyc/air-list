@@ -54186,8 +54186,7 @@ function neighbours(calendar) {
 }
 
 function lists(calendar, xAxis, neighbourhoods) {
-  //request.get('https://raw.githubusercontent.com/henryyc/air-list/master/data/listings.csv', function(error, response, body) {
-    request.get('https://raw.githubusercontent.com/henryyc/air-list/master/data/neighbourhoods.csv', function(error, response, body) {
+  request.get('https://raw.githubusercontent.com/henryyc/air-list/master/data/listings.csv', function(error, response, body) {
     if (!error && response.statusCode == 200) {
       listings = body;
 
@@ -54207,20 +54206,34 @@ function lists(calendar, xAxis, neighbourhoods) {
       var CSV_STRING = body;
 
       console.log("start reading listings");
+
       csv
         .fromString(CSV_STRING, {
           headers: true
         })
         .on("data", function(data) {
-          /*var lat = data["latitude"];
+          console.log(data);
+        })
+        .on("end", function() {
+
+          console.log("read");
+        });
+        console.log(" lul");
+
+      /*csv
+        .fromString(CSV_STRING, {
+          headers: true
+        })
+        .on("data", function(data) {
+          var lat = data["latitude"];
           var long = data["longitude"];
-          var price = parseFloat(data["price"].substring(1));*/
+          var price = parseFloat(data["price"].substring(1));
           console.log("fucking work idiot");
 
           //add to basic price statistics
           var neighbourhood = data["host_neighbourhood"];
 
-          addHeat(0, 0, 0, heatmapData, false);//(lat, long, price, heatmapData, false)
+          addHeat(0, 0, 0, heatmapData, false); //(lat, long, price, heatmapData, false)
           addMarker(data);
         })
         .on("end", function() {
@@ -54233,7 +54246,7 @@ function lists(calendar, xAxis, neighbourhoods) {
         .on("error", function(error) {
           console.log("lol");
           console.log(error);
-        });
+        });*/
     }
   });
 }
