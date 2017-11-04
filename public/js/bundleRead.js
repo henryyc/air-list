@@ -53087,133 +53087,6 @@ module.exports = function() {
       //freq[i] = 4;
     }
 
-    /* from my old code: https://github.com/usnistgov/PasswordVizTool/blob/master/Histogram/histogram.html */
-    var margin = {
-        top: 40,
-        right: 20,
-        bottom: 30,
-        left: 40
-      },
-      width = 960 - margin.left - margin.right,
-      height = 500 - margin.top - margin.bottom;
-    var x = d3.scale.ordinal()
-      .rangeRoundBands([0, width], .1);
-    var y = d3.scale.linear()
-      .range([height, 0]);
-    var xAxis = d3.svg.axis()
-      .scale(x)
-      .orient("bottom");
-    var yAxis = d3.svg.axis()
-      .scale(y)
-      .orient("left");
-    var tip = d3.tip()
-      .attr('class', 'd3-tip')
-      .offset([-10, 0])
-      .html(function(d) {
-        /* CUST9: Change tooltip content & color (for color: span style='color:yourcolor'>)*/
-        return d.letter + "  <strong>Frequency:<\/strong> <span style='color:red'>" + d.frequency + "<\/span>";
-      })
-    var svg = d3.select("body").append("svg")
-      .attr("width", width + margin.left + margin.right)
-      .attr("height", height + margin.top + margin.bottom)
-      .append("g")
-      .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
-    svg.call(tip);
-
-    // The new data variable.
-    var data = [];
-    for (var i = 0; i < horiAxis.length; i++)
-      data.push({
-        letter: horiAxis[i],
-        frequency: freq[i],
-        order: i
-      });
-
-    function type(d) {
-      d.frequency = +d.frequency;
-      return d;
-    }
-    x.domain(data.map(function(d) {
-      return d.letter;
-    }));
-    y.domain([0, d3.max(data, function(d) {
-      return d.frequency;
-    })]);
-    svg.append("g")
-      .attr("class", "x axis")
-      .attr("transform", "translate(0," + height + ")")
-      .call(xAxis);
-    svg.append("g")
-      .attr("class", "y axis")
-      .call(yAxis)
-      .append("text")
-      .attr("transform", "rotate(-90)")
-      .attr("y", 6)
-      .attr("dy", ".71em")
-      .style("text-anchor", "end")
-      .text("Frequency");
-    svg.selectAll(".bar")
-      .data(data)
-      .enter().append("rect")
-      .attr("class", "bar")
-      .attr("x", function(d) {
-        return x(d.letter);
-      })
-      .attr("width", x.rangeBand())
-      .attr("y", function(d) {
-        return y(d.frequency);
-      })
-      .attr("height", function(d) {
-        return height - y(d.frequency);
-      })
-      .on('mouseover', tip.show)
-      .on('mouseout', tip.hide);
-
-    d3.selectAll("sortIt").on("change", change);
-    var sortTimeout = setTimeout(function() {
-      d3.selectAll("sortIt").property("checked", true).each(change);
-    }, 2000);
-    //sort
-    function change() {
-      clearTimeout(sortTimeout);
-      // Copy-on-write since tweens are evaluated after a delay.
-      var x0 = x.domain(data.sort(this.checked
-            /* CUST10: Change graph sort */
-            /* Use this: ? function(a, b) { return a.frequency - b.frequency; } to sort ascending */
-            ?
-            function(a, b) {
-              return b.frequency - a.frequency;
-            }
-            /* Use this: : function(a, b) { return d3.ascending(b.order, a.order); }) to sort from space to A*/
-            :
-            function(a, b) {
-              return d3.ascending(a.order, b.order);
-            })
-
-          .map(function(d) {
-            return d.letter;
-          }))
-        .copy();
-      svg.selectAll(".bar")
-        /* Use this: .sort(function(a, b) { return x0(b.letter) - x0(a.letter); }); to sort smaller values first*/
-        .sort(function(a, b) {
-          return x0(a.letter) - x0(b.letter);
-        });
-      var transition = svg.transition().duration(750),
-        delay = function(d, i) {
-          return i * 50;
-        };
-      transition.selectAll(".bar")
-        .delay(delay)
-        .attr("x", function(d) {
-          return x0(d.letter);
-        });
-      transition.select(".x.axis")
-        .call(xAxis)
-        .selectAll("g")
-        .delay(delay);
-    }
-
     console.log("cost graph created");
   }
 
@@ -54306,15 +54179,15 @@ function neighbours(calendar) {
         .on("end", function() {
 
           console.log("calendar data finished being sent");
+          lists(calendar, xAxis, neighbourhoods);
         });
-
-      lists(calendar, xAxis, neighbourhoods);
     }
   });
 }
 
 function lists(calendar, xAxis, neighbourhoods) {
-  request.get('https://raw.githubusercontent.com/henryyc/air-list/master/data/listings.csv', function(error, response, body) {
+  //request.get('https://raw.githubusercontent.com/henryyc/air-list/master/data/listings.csv', function(error, response, body) {
+    request.get('https://raw.githubusercontent.com/henryyc/air-list/master/data/neighbourhoods.csv', function(error, response, body) {
     if (!error && response.statusCode == 200) {
       listings = body;
 
@@ -54326,44 +54199,41 @@ function lists(calendar, xAxis, neighbourhoods) {
       var heatmapData = [];
       var priceData = new Array(xAxis.length); //keep track of price for each neighbourhood
       var priceFreq = new Array(xAxis.length); //keep track of number of listings in each neighbourhood
-      for(var i = 0; i < priceData.length; i++){
+      for (var i = 0; i < priceData.length; i++) {
         priceData[i] = 0;
         priceFreq[i] = 0;
       }
 
       var CSV_STRING = body;
 
+      console.log("start reading listings");
       csv
         .fromString(CSV_STRING, {
           headers: true
         })
         .on("data", function(data) {
-          var lat = data["latitude"];
+          /*var lat = data["latitude"];
           var long = data["longitude"];
-          var price = parseFloat(data["price"].substring(1));
-          console.log(price);
+          var price = parseFloat(data["price"].substring(1));*/
+          console.log("fucking work idiot");
 
           //add to basic price statistics
           var neighbourhood = data["host_neighbourhood"];
-          for(var i = 0; i < xAxis.length; i++){
-            if(xAxis[i] == neighbourhood){
-              //substr by 1 to get rid of dollar sign
-              priceData[i] += price;
-              priceFreq[i]++;
-              i = xAxis.length;
-            }
-          }
 
-          addHeat(lat, long, price, heatmapData, false)
-          addMarker(data)
+          addHeat(0, 0, 0, heatmapData, false);//(lat, long, price, heatmapData, false)
+          addMarker(data);
         })
         .on("end", function() {
           graphPrices(xAxis, priceData, priceFreq);
           addHeat(0, 0, 0, heatmapData, true);
-          console.log("listing and price data finished being sent");
-        });
 
-      finalFile(calendar, listings, neighbourhoods);
+          finalFile(calendar, listings, neighbourhoods);
+          console.log("listing and price data finished being sent");
+        })
+        .on("error", function(error) {
+          console.log("lol");
+          console.log(error);
+        });
     }
   });
 }

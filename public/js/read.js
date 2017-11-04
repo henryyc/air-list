@@ -41,9 +41,8 @@ function neighbours(calendar) {
         .on("end", function() {
 
           console.log("calendar data finished being sent");
+          lists(calendar, xAxis, neighbourhoods);
         });
-
-      lists(calendar, xAxis, neighbourhoods);
     }
   });
 }
@@ -61,44 +60,41 @@ function lists(calendar, xAxis, neighbourhoods) {
       var heatmapData = [];
       var priceData = new Array(xAxis.length); //keep track of price for each neighbourhood
       var priceFreq = new Array(xAxis.length); //keep track of number of listings in each neighbourhood
-      for(var i = 0; i < priceData.length; i++){
+      for (var i = 0; i < priceData.length; i++) {
         priceData[i] = 0;
         priceFreq[i] = 0;
       }
 
       var CSV_STRING = body;
 
+      console.log("start reading listings");
       csv
         .fromString(CSV_STRING, {
           headers: true
         })
         .on("data", function(data) {
-          var lat = data["latitude"];
+          /*var lat = data["latitude"];
           var long = data["longitude"];
-          var price = parseFloat(data["price"].substring(1));
-          console.log(price);
+          var price = parseFloat(data["price"].substring(1));*/
+          console.log("fucking work idiot");
 
           //add to basic price statistics
           var neighbourhood = data["host_neighbourhood"];
-          for(var i = 0; i < xAxis.length; i++){
-            if(xAxis[i] == neighbourhood){
-              //substr by 1 to get rid of dollar sign
-              priceData[i] += price;
-              priceFreq[i]++;
-              i = xAxis.length;
-            }
-          }
 
-          addHeat(lat, long, price, heatmapData, false)
-          addMarker(data)
+          addHeat(0, 0, 0, heatmapData, false);//(lat, long, price, heatmapData, false)
+          addMarker(data);
         })
         .on("end", function() {
           graphPrices(xAxis, priceData, priceFreq);
           addHeat(0, 0, 0, heatmapData, true);
-          console.log("listing and price data finished being sent");
-        });
 
-      finalFile(calendar, listings, neighbourhoods);
+          finalFile(calendar, listings, neighbourhoods);
+          console.log("listing and price data finished being sent");
+        })
+        .on("error", function(error) {
+          console.log("lol");
+          console.log(error);
+        });
     }
   });
 }
