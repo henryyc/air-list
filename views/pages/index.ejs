@@ -14,7 +14,7 @@
           <li><a href="#one">Cost</a></li>
           <li><a href="#two">Reviews</a></li>
           <li><a href="#three">Listings</a></li>
-          <li><a href="#four">Estimator</a></li>
+          <li><a href="#four">Analyzer</a></li>
         </ul>
       </nav>
     </div>
@@ -30,7 +30,10 @@
         <p>Visualize AirBnB data from San Francisco to maximize your own renting profit and make smarter investments.</p>
         <p><span id="loadPercent">Please wait - page is loading...</span></p>
         <ul class="actions">
-          <li><div id ="welcome" a href="#one" class="button scrolly">Learn More</a></li>
+          <li>
+            <div id="welcome" a href="#one" class="button scrolly">Learn More</a>
+            </div>
+          </li>
         </ul>
       </div>
     </section>
@@ -43,47 +46,23 @@
         <br><br><br><br><br><br><br><br><br><br><br><br><br><br>
 
         <h2>Cost</h2>
-        <p>Heatmap of San Francisco, based off average price of an AirBnB in each location.</p>
+        <p>Heatmap of San Francisco, based off prices of AirBnBs in each location.</p>
         <br><br>
     </section>
 
     <!-- Two/to-do -->
     <section id="two" class="wrapper style3 fade-up">
+
+      <input type="checkbox" id="sortIt">
+      <label><font color="white">Sort values</font></label>
+      <div class="features" id="pgraph">banana</div>
+
       <div class="inner">
+
+
+
         <h2>What we do</h2>
         <p>Phasellus convallis elit id ullamcorper pulvinar. Duis aliquam turpis mauris, eu ultricies erat malesuada quis. Aliquam dapibus, lacus eget hendrerit bibendum, urna est aliquam sem, sit amet imperdiet est velit quis lorem.</p>
-        <div class="features">
-          <section>
-            <span class="icon major fa-code"></span>
-            <h3>Lorem ipsum amet</h3>
-            <p>Phasellus convallis elit id ullam corper amet et pulvinar. Duis aliquam turpis mauris, sed ultricies erat dapibus.</p>
-          </section>
-          <section>
-            <span class="icon major fa-lock"></span>
-            <h3>Aliquam sed nullam</h3>
-            <p>Phasellus convallis elit id ullam corper amet et pulvinar. Duis aliquam turpis mauris, sed ultricies erat dapibus.</p>
-          </section>
-          <section>
-            <span class="icon major fa-cog"></span>
-            <h3>Sed erat ullam corper</h3>
-            <p>Phasellus convallis elit id ullam corper amet et pulvinar. Duis aliquam turpis mauris, sed ultricies erat dapibus.</p>
-          </section>
-          <section>
-            <span class="icon major fa-desktop"></span>
-            <h3>Veroeros quis lorem</h3>
-            <p>Phasellus convallis elit id ullam corper amet et pulvinar. Duis aliquam turpis mauris, sed ultricies erat dapibus.</p>
-          </section>
-          <section>
-            <span class="icon major fa-chain"></span>
-            <h3>Urna quis bibendum</h3>
-            <p>Phasellus convallis elit id ullam corper amet et pulvinar. Duis aliquam turpis mauris, sed ultricies erat dapibus.</p>
-          </section>
-          <section>
-            <span class="icon major fa-diamond"></span>
-            <h3>Aliquam urna dapibus</h3>
-            <p>Phasellus convallis elit id ullam corper amet et pulvinar. Duis aliquam turpis mauris, sed ultricies erat dapibus.</p>
-          </section>
-        </div>
       </div>
     </section>
 
@@ -95,7 +74,7 @@
         <br><br><br><br><br><br><br><br><br><br><br><br><br><br>
 
         <h2>View Current Listings</h2>
-        <p>Click on a marker to see listing data </p>
+        <p>Click on a marker to see listing data.</p>
 
         <br><br>
 
@@ -107,8 +86,8 @@
     <!-- Four/calculator -->
     <section id="four" class="wrapper style2 fullscreen fade-up">
       <div class="inner">
-        <h2>Estimator</h2>
-        <p>Enter your address to find out how much you should rent.</p>
+        <h2>Analyzer</h2>
+        <p>Enter your address to find out how much you should rent to maximize bookings</p>
 
         <div id="locationField">
           <input id="autocomplete" placeholder="Enter your address" onFocus="geolocate()" type="text"></input>
@@ -116,7 +95,13 @@
 
         <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDkz70GPVG_cUhCLbmDg8VfHkiVGZ7KI6U&libraries=visualization,places&callback=initAutocomplete"></script>
 
-        <br><br><pre><code>Recommended Daily Rate:<div id="tablePrice">n/a</div></code></pre>
+        <br><br>
+        <pre>
+          <code>
+            Recommended Daily Rate:<div id="tablePrice">n/a</div><!--price estimation-->
+            Estimated Weekly Average Income:<div id="tablePriceTwo">n/a</div><!--bookings optimization-->
+          </code>
+        </pre>
       </div>
 
     </section>
@@ -133,7 +118,9 @@
       </div>
     </footer>
 
-    <div class="modal"><!-- Place at bottom of page --></div>
+    <div class="modal">
+      <!-- Place at bottom of page -->
+    </div>
 </body>
 
 </html>
