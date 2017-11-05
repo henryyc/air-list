@@ -75,7 +75,7 @@ function listingsPrice(xAxis) {
           var temp = data["price"];
 
           //get rid of any dollar signs, commas, or extra spaces
-          var price = Number(currency.replace(/[^0-9\.-]+/g, ""));
+          var price = Number(temp.replace(/[^0-9\.-]+/g, ""));
 
           //add to basic price statistics
           //  var neighbourhood = data["host_neighbourhood"];
@@ -96,7 +96,7 @@ function listingsPrice(xAxis) {
 }
 
 function listingsInfo(calendar, listings, neighbourhoods) {
-  request.get('https://raw.githubusercontent.com/henryyc/air-list/master/data/reviews.csv', function(error, response, body) {
+  request.get('https://raw.githubusercontent.com/henryyc/air-list/master/data/lat_long_info.csv', function(error, response, body) {
     if (!error && response.statusCode == 200) {
 
       //go through the csv line by line to graph the markers one by one
@@ -108,6 +108,7 @@ function listingsInfo(calendar, listings, neighbourhoods) {
           headers: true
         })
         .on("data", function(data) {
+          console.log("banana");
           addMarker(data);
         })
         .on("end", function() {

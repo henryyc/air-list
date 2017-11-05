@@ -47,7 +47,8 @@ module.exports = function() {
 
       heatmap.setMap(costMap);
       console.log("heat costs layered");
-      document.getElementById('loadPercent').innerHTML = 'Press &#39Learn more&#39 to get started.';
+      document.getElementById('loadPercent').innerHTML = 'Almost done...';
+      //document.getElementById('loadPercent').innerHTML = 'Press &#39Learn more&#39 to get started.';
     }
 
     //continue adding to dataset
