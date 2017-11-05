@@ -71,7 +71,7 @@ module.exports = function() {
 
       '<p style="color:black">' + data["summary"]
 
-      '<br />More info: ' + data["host_url"] + '</p>' +
+      '<br />More info: ' + data["listing_url"] + '</p>' +
 
       '</div>' +
       '</div>';
@@ -86,7 +86,7 @@ module.exports = function() {
     var marker = new google.maps.Marker({
       position: new google.maps.LatLng(data["latitude"], data["longitude"]),
       map: listingsMap,
-      title: data["host_name"],
+      title: data["name"],
       icon: markerImage//green for available, red for unavaiable, yellow for available soon
     });
 

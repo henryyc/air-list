@@ -12,15 +12,13 @@ require('./jquery.csv.js');
 
 request.get('https://raw.githubusercontent.com/henryyc/air-list/master/data/calendar.csv', function(error, response, body) {
   if (!error && response.statusCode == 200) {
-    calendar = body;
-    neighbours(calendar);
+    neighbours();
   }
 });
 
-function neighbours(calendar) {
+function neighbours() {
   request.get('https://raw.githubusercontent.com/henryyc/air-list/master/data/neighbourhoods.csv', function(error, response, body) {
     if (!error && response.statusCode == 200) {
-      neighbourhoods = body;
 
       var csv = require("fast-csv");
       var heatmapData = [];
@@ -41,21 +39,19 @@ function neighbours(calendar) {
         .on("end", function() {
 
           console.log("calendar data finished being sent");
-          lists(calendar, xAxis, neighbourhoods);
+          listingsPrice(xAxis);
         });
     }
   });
 }
 
-function lists(calendar, xAxis, neighbourhoods) {
+function listingsPrice(xAxis) {
   request.get('https://raw.githubusercontent.com/henryyc/air-list/master/data/lat_long_price.csv', function(error, response, body) {
     if (!error && response.statusCode == 200) {
-      listings = body;
 
       require('./graphs.js')();
       initMap();
 
-      //go through the csv line by line to graph the markers one by one
       var csv = require("fast-csv");
       var heatmapData = [];
       var priceData = new Array(xAxis.length); //keep track of price for each neighbourhood
@@ -76,20 +72,13 @@ function lists(calendar, xAxis, neighbourhoods) {
         .on("data", function(data) {
           var lat = data["latitude"];
           var long = data["longitude"];
-          var price = data["price"];
+          var temp = data["price"];
 
           //get rid of any dollar signs, commas, or extra spaces
-          price = price.replace('$', '');
-          price = price.replace(',', '');
-
-          //format price into a double
-        /*  price = parseFloat(price);
-          if(price > 999)
-            console.log(price);*/
-          console.log(price);
+          var price = Number(currency.replace(/[^0-9\.-]+/g, ""));
 
           //add to basic price statistics
-          var neighbourhood = data["host_neighbourhood"];
+          //  var neighbourhood = data["host_neighbourhood"];
 
           addHeat(lat, long, price, heatmapData, false);
           //addMarker(data);
@@ -101,16 +90,29 @@ function lists(calendar, xAxis, neighbourhoods) {
           console.log("listing and price data finished being sent");
         });
 
-        finalFile(calendar, listings, neighbourhoods);
+      listingsInfo(listings, neighbourhoods);
     }
   });
 }
 
-function finalFile(calendar, listings, neighbourhoods) {
+function listingsInfo(calendar, listings, neighbourhoods) {
   request.get('https://raw.githubusercontent.com/henryyc/air-list/master/data/reviews.csv', function(error, response, body) {
     if (!error && response.statusCode == 200) {
-      reviews = body;
-      console.log("finished");
+
+      //go through the csv line by line to graph the markers one by one
+      var csv = require("fast-csv");
+      var CSV_STRING = body;
+
+      csv
+        .fromString(CSV_STRING, {
+          headers: true
+        })
+        .on("data", function(data) {
+          addMarker(data);
+        })
+        .on("end", function() {
+          console.log("finished");
+        });
     }
   });
 }
