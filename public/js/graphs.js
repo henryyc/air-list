@@ -55,7 +55,7 @@ module.exports = function() {
       var weight = {
         location: new google.maps.LatLng(lat, long),
         weight: parseFloat(price)
-      }; //check up later
+      };
       heatmapData.push(weight);
     }
   }
@@ -93,7 +93,8 @@ module.exports = function() {
     var marker = new google.maps.Marker({
       position: new google.maps.LatLng(data["latitude"], data["longitude"]),
       map: listingsMap,
-      title: data["host_name"]
+      title: data["host_name"],
+      icon: makerImage//green for available, red for unavaiable, yellow for available soon
     });
 
     marker.addListener('click', function() {

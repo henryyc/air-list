@@ -10,6 +10,7 @@ function initAutocomplete() {
 
   // When the user selects an address from the dropdown save it
   autocomplete.addListener('place_changed', calculateCost);
+  console.log("autocomplete added");
 }
 
 function calculateCost() {

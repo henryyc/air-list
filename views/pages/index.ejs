@@ -58,11 +58,28 @@
       <div class="features" id="pgraph">banana</div>
 
       <div class="inner">
-
-
-
         <h2>What we do</h2>
         <p>Phasellus convallis elit id ullamcorper pulvinar. Duis aliquam turpis mauris, eu ultricies erat malesuada quis. Aliquam dapibus, lacus eget hendrerit bibendum, urna est aliquam sem, sit amet imperdiet est velit quis lorem.</p>
+
+        <p>banana</p>
+        <p>banana</p>
+        <p>banana</p>
+        <p>banana</p>
+        <p>banana</p>
+        <p>banana</p>
+        <p>banana</p>
+        <p>banana</p>
+        <p>banana</p>
+        <p>banana</p>
+        <p>banana</p>
+        <p>banana</p>
+        <p>banana</p>
+        <p>banana</p>
+        <p>banana</p>
+        <p>banana</p>
+        <p>banana</p>
+        <p>banana</p>
+        <p>banana</p>
       </div>
     </section>
 
@@ -76,6 +93,11 @@
         <h2>View Current Listings</h2>
         <p>Click on a marker to see listing data.</p>
 
+        <p><i>Data taken as of ----</i></p>
+        <p><b>Red:</b> Unavailable.</p>
+        <p><b>Yelow:</b> Will be available within a month.</p>
+        <p><b>Green:</b> Currently Available.</p>
+
         <br><br>
 
         <script src="/js/bundleRead.js"></script>
@@ -87,7 +109,8 @@
     <section id="four" class="wrapper style2 fullscreen fade-up">
       <div class="inner">
         <h2>Analyzer</h2>
-        <p>Enter your address to find out how much you should rent to maximize bookings</p>
+        <p>Enter your address to find out: 1. Our recommended daily rent to maximize bookings and profit. 2. Your estimated weekly average income in the area.
+        </p>
 
         <div id="locationField">
           <input id="autocomplete" placeholder="Enter your address" onFocus="geolocate()" type="text"></input>
@@ -96,12 +119,27 @@
         <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDkz70GPVG_cUhCLbmDg8VfHkiVGZ7KI6U&libraries=visualization,places&callback=initAutocomplete"></script>
 
         <br><br>
-        <pre>
-          <code>
-            Recommended Daily Rate:<div id="tablePrice">n/a</div><!--price estimation-->
-            Estimated Weekly Average Income:<div id="tablePriceTwo">n/a</div><!--bookings optimization-->
-          </code>
-        </pre>
+
+        <table>
+          <tbody>
+            <tr>
+              <!--price estimation-->
+              <td>Recommended Daily Rate:</td>
+              <td>
+                <div id="tablePrice">n/a</div>
+              </td>
+            </tr>
+
+            <tr>
+              <!--bookings optimization-->
+              <td>Estimated Weekly Average Income:</td>
+              <td>
+                <div id="tablePriceTwo">n/a</div>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+
       </div>
 
     </section>

@@ -48,12 +48,14 @@ function neighbours(calendar) {
 }
 
 function lists(calendar, xAxis, neighbourhoods) {
-  request.get('https://raw.githubusercontent.com/henryyc/air-list/master/data/listings.csv', function(error, response, body) {
+  request.get('https://raw.githubusercontent.com/henryyc/air-list/master/data/lat_long_price.csv', function(error, response, body) {
     if (!error && response.statusCode == 200) {
       listings = body;
 
       require('./graphs.js')();
       initMap();
+
+
 
       //go through the csv line by line to graph the markers one by one
       var csv = require("fast-csv");
@@ -76,22 +78,31 @@ function lists(calendar, xAxis, neighbourhoods) {
         .on("data", function(data) {
           var lat = data["latitude"];
           var long = data["longitude"];
-          var price = parseFloat(data["price"].substring(1));
-          console.log("fucking work idiot");
+          var price = data["price"];
+
+          //get rid of any dollar signs, commas, or extra spaces
+          price = price.replace('$', '');
+          price = price.replace(',', '');
+
+          //format price into a double
+          price = parseFloat(price);
+          if(price > 999)
+            console.log(price);
 
           //add to basic price statistics
           var neighbourhood = data["host_neighbourhood"];
 
-          addHeat(0, 0, 0, heatmapData, false); //(lat, long, price, heatmapData, false)
-          addMarker(data);
+          addHeat(lat, long, price, heatmapData, false);
+          //todo: addMarker(data);
         })
         .on("end", function() {
           graphPrices(xAxis, priceData, priceFreq);
           addHeat(0, 0, 0, heatmapData, true);
 
-          finalFile(calendar, listings, neighbourhoods);
           console.log("listing and price data finished being sent");
         });
+
+        finalFile(calendar, listings, neighbourhoods);
     }
   });
 }
@@ -100,6 +111,7 @@ function finalFile(calendar, listings, neighbourhoods) {
   request.get('https://raw.githubusercontent.com/henryyc/air-list/master/data/reviews.csv', function(error, response, body) {
     if (!error && response.statusCode == 200) {
       reviews = body;
+      console.log("finished");
     }
   });
 }
