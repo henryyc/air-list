@@ -55,8 +55,6 @@ function lists(calendar, xAxis, neighbourhoods) {
       require('./graphs.js')();
       initMap();
 
-
-
       //go through the csv line by line to graph the markers one by one
       var csv = require("fast-csv");
       var heatmapData = [];
@@ -85,15 +83,16 @@ function lists(calendar, xAxis, neighbourhoods) {
           price = price.replace(',', '');
 
           //format price into a double
-          price = parseFloat(price);
+        /*  price = parseFloat(price);
           if(price > 999)
-            console.log(price);
+            console.log(price);*/
+          console.log(price);
 
           //add to basic price statistics
           var neighbourhood = data["host_neighbourhood"];
 
           addHeat(lat, long, price, heatmapData, false);
-          addMarker(data);
+          //addMarker(data);
         })
         .on("end", function() {
           graphPrices(xAxis, priceData, priceFreq);
