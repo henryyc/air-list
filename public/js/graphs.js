@@ -62,17 +62,16 @@ module.exports = function() {
   }
 
   //add a marker to listing map
-  this.addMarker = function(data) {
-
+  this.addMarker = function(lat, long, name, summary, url) {
     var contentString = '<div id="content">' +
       '<div id="siteNotice">' +
       '</div>' +
-      '<h1 id="firstHeading" class="firstHeading" style="color:black">' + data["name"] + '</h1>' +
+      '<h1 id="firstHeading" class="firstHeading" style="color:black">' + name + '</h1>' +
       '<div id="bodyContent">' +
 
-      '<p style="color:black">' + data["summary"]
+      '<p style="color:black">' + summary +
 
-      '<br />More info: ' + data["listing_url"] + '</p>' +
+      '<br />More info: ' + url + '</p>' +
 
       '</div>' +
       '</div>';
@@ -82,13 +81,10 @@ module.exports = function() {
       content: '<p style="color:black;">' + contentString + '</p>'
     });
 
-    var markerImage = "https://raw.githubusercontent.com/henryyc/air-list/master/images/green_dot.png";
-
     var marker = new google.maps.Marker({
-      position: new google.maps.LatLng(data["latitude"], data["longitude"]),
+      position: new google.maps.LatLng(lat, long),
       map: listingsMap,
-      title: data["name"],
-      icon: markerImage//green for available, red for unavaiable, yellow for available soon
+      title: name
     });
 
     marker.addListener('click', function() {

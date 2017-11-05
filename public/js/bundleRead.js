@@ -53116,17 +53116,16 @@ module.exports = function() {
   }
 
   //add a marker to listing map
-  this.addMarker = function(data) {
-
+  this.addMarker = function(lat, long, name, summary, url) {
     var contentString = '<div id="content">' +
       '<div id="siteNotice">' +
       '</div>' +
-      '<h1 id="firstHeading" class="firstHeading" style="color:black">' + data["name"] + '</h1>' +
+      '<h1 id="firstHeading" class="firstHeading" style="color:black">' + name + '</h1>' +
       '<div id="bodyContent">' +
 
-      '<p style="color:black">' + data["summary"]
+      '<p style="color:black">' + summary +
 
-      '<br />More info: ' + data["listing_url"] + '</p>' +
+      '<br />More info: ' + url + '</p>' +
 
       '</div>' +
       '</div>';
@@ -53139,9 +53138,9 @@ module.exports = function() {
     var markerImage = "https://raw.githubusercontent.com/henryyc/air-list/master/images/green_dot.png";
 
     var marker = new google.maps.Marker({
-      position: new google.maps.LatLng(data["latitude"], data["longitude"]),
+      position: new google.maps.LatLng(lat, long),
       map: listingsMap,
-      title: data["name"],
+      title: name,
       icon: markerImage//green for available, red for unavaiable, yellow for available soon
     });
 
@@ -54159,6 +54158,7 @@ function neighbours() {
       var xAxis = [];
       var i = 0;
 
+      console.log("neighbourhod data start");
       csv
         .fromString(CSV_STRING, {
           headers: true
@@ -54170,7 +54170,7 @@ function neighbours() {
         })
         .on("end", function() {
 
-          console.log("calendar data finished being sent");
+          console.log("neighbourhod data sent");
           listingsPrice(xAxis);
         });
     }
@@ -54195,7 +54195,7 @@ function listingsPrice(xAxis) {
 
       var CSV_STRING = body;
 
-      console.log("start reading listings");
+      console.log("price data start");
 
       csv
         .fromString(CSV_STRING, {
@@ -54219,32 +54219,32 @@ function listingsPrice(xAxis) {
           graphPrices(xAxis, priceData, priceFreq);
           addHeat(0, 0, 0, heatmapData, true);
 
-          console.log("listing and price data finished being sent");
+          console.log("price data sent");
+          listingsInfo(listings, neighbourhoods);
         });
-
-      listingsInfo(listings, neighbourhoods);
     }
   });
 }
 
-function listingsInfo(calendar, listings, neighbourhoods) {
-  request.get('https://raw.githubusercontent.com/henryyc/air-list/master/data/reviews.csv', function(error, response, body) {
+function listingsInfo(listings, neighbourhoods) {
+  request.get('https://raw.githubusercontent.com/henryyc/air-list/master/data/lat_long_info.csv', function(error, response, body) {
     if (!error && response.statusCode == 200) {
 
       //go through the csv line by line to graph the markers one by one
       var csv = require("fast-csv");
       var CSV_STRING = body;
 
+      console.log("marker data start");
       csv
         .fromString(CSV_STRING, {
           headers: true
         })
         .on("data", function(data) {
-          console.log("banana");
-          addMarker(data);
+          addMarker(data["latitude"], data["longitude"], data["name"], data["summary"], data["listing_url"]);
         })
         .on("end", function() {
-          console.log("finished");
+            console.log("marker data sent");
+            console.log("finished");
         });
     }
   });
