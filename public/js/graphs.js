@@ -66,19 +66,10 @@ module.exports = function() {
     var contentString = '<div id="content">' +
       '<div id="siteNotice">' +
       '</div>' +
-      '<h1 id="firstHeading" class="firstHeading" style="color:black">Uluru</h1>' +
+      '<h1 id="firstHeading" class="firstHeading" style="color:black">' + data["name"] + '</h1>' +
       '<div id="bodyContent">' +
 
-      '<p style="color:black"> <b style="color:black">Uluru</b>, also referred to as <b style="color:black">Ayers Rock</b>, is a large ' +
-      'sandstone rock formation in the southern part of the ' +
-      'Northern Territory, central Australia. It lies 335&#160;km (208&#160;mi) ' +
-      'south west of the nearest large town, Alice Springs; 450&#160;km ' +
-      '(280&#160;mi) by road. Kata Tjuta and Uluru are the two major ' +
-      'features of the Uluru - Kata Tjuta National Park. Uluru is ' +
-      'sacred to the Pitjantjatjara and Yankunytjatjara, the ' +
-      'Aboriginal people of the area. It has many springs, waterholes, ' +
-      'rock caves and ancient paintings. Uluru is listed as a World ' +
-      'Heritage Site.' +
+      '<p style="color:black">' + data["summary"]
 
       '<br />More info: ' + data["host_url"] + '</p>' +
 
@@ -90,11 +81,13 @@ module.exports = function() {
       content: '<p style="color:black;">' + contentString + '</p>'
     });
 
+    var markerImage = "https://raw.githubusercontent.com/henryyc/air-list/master/images/green_dot.png";
+
     var marker = new google.maps.Marker({
       position: new google.maps.LatLng(data["latitude"], data["longitude"]),
       map: listingsMap,
       title: data["host_name"],
-      icon: makerImage//green for available, red for unavaiable, yellow for available soon
+      icon: markerImage//green for available, red for unavaiable, yellow for available soon
     });
 
     marker.addListener('click', function() {

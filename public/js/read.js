@@ -93,7 +93,7 @@ function lists(calendar, xAxis, neighbourhoods) {
           var neighbourhood = data["host_neighbourhood"];
 
           addHeat(lat, long, price, heatmapData, false);
-          //todo: addMarker(data);
+          addMarker(data);
         })
         .on("end", function() {
           graphPrices(xAxis, priceData, priceFreq);
