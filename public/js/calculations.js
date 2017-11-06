@@ -13,6 +13,5 @@ module.exports = function() {
     otherPrices = prices;
     otherAvailability = availability;
     initData(lats, longs, prices, availability);
-    console.log(otherLats.length);
   }
 }

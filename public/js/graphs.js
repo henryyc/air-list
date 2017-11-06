@@ -26,32 +26,83 @@ module.exports = function() {
   this.graphPopularity = function(neighbourhoods, numListings, numBooked) {
 
     google.charts.load('current', {
-      'packages': ['bar']
+      'packages': ['corechart']
     });
-    google.charts.setOnLoadCallback(drawChart);
+    google.charts.setOnLoadCallback(drawSeriesChart);
 
     var formatted = [];
-    formatted.push(['Neighbourhood', 'Total Number of Listings', 'Number of Listings Booked']);
+    formatted.push(['ID', 'Listings', '% Booked', 'District', 'Number of Booked Listings']);
 
-    for(var i = 0; i < neighbourhoods.length; i++)
-      formatted.push([neighbourhoods[i], numListings[i], numBooked[i]]);
+    for (var i = 0; i < neighbourhoods.length; i++)
+      formatted.push([neighbourhoods[i].substring(0, 3).toUpperCase(), numListings[i], (numBooked[i] / (90 * numListings[i])),
+        neighbourhoods[i], numBooked[i]
+      ]);
 
-    function drawChart() {
+    function drawSeriesChart() {
 
-      console.log(formatted);
       var data = google.visualization.arrayToDataTable(formatted);
 
       var options = {
-        chart: {
-          title: 'District Popularity',
-          subtitle: 'Data Taken in September',
+        title: 'Correlation between number of listings in a district, percent of booked listings ' +
+          'and number of booked listings (2017)',
+        titleTextStyle: {
+          color: 'white',
+          fontName: 'sans-serif'
         },
-        bars: 'horizontal' // Required for Material Bar Charts.
+        hAxis: {
+          title: 'Total Amount of Listings',
+          textStyle: {
+            color: 'white',
+            fontName: 'sans-serif'
+          },
+          titleTextStyle: {
+            color: 'white',
+            fontName: 'sans-serif'
+          },
+          gridlines: {
+            color: 'white',
+            fontName: 'sans-serif'
+          },
+          baselineColor: 'white'
+        },
+        vAxis: {
+          title: 'Percent of Booked Listings',
+          textStyle: {
+            color: 'white',
+            fontName: 'sans-serif'
+          },
+          titleTextStyle: {
+            color: 'white',
+            fontName: 'sans-serif'
+          },
+          gridlines: {
+            color: 'white',
+            fontName: 'sans-serif'
+          },
+          baselineColor: 'white'
+        },
+        bubble: {
+          textStyle: {
+            color: 'white',
+            fontSize: 18
+          },
+          titleTextStyle: {
+            color: 'white',
+            fontName: 'sans-serif'
+          }
+        },
+        legend: {
+          textStyle: {
+            color: 'white',
+            fontName: 'sans-serif'
+          }
+        },
+        backgroundColor: '#b74e91',
+        is3D: true
       };
 
-      var chart = new google.charts.Bar(document.getElementById('barchart_material'));
-
-      chart.draw(data, google.charts.Bar.convertOptions(options));
+      var chart = new google.visualization.BubbleChart(document.getElementById('series_chart_div'));
+      chart.draw(data, options);
     }
 
     console.log("popularity graph created");
