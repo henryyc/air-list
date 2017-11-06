@@ -47,9 +47,10 @@ function neighbours() {
 }
 
 function listingsPrice(xAxis) {
-  request.get('https://raw.githubusercontent.com/henryyc/air-list/master/data/lat_long_price.csv', function(error, response, body) {
+  request.get('https://raw.githubusercontent.com/henryyc/air-list/master/data/listing_info_split.csv', function(error, response, body) {
     if (!error && response.statusCode == 200) {
 
+      require('./estimate.js')();
       require('./graphs.js')();
       initMap();
 
@@ -58,6 +59,7 @@ function listingsPrice(xAxis) {
       var lats = [];
       var longs = [];
       var prices = [];
+      var availability = [];
 
       var CSV_STRING = body;
 
@@ -79,14 +81,14 @@ function listingsPrice(xAxis) {
           lats.push(lat);
           longs.push(long);
           prices.push(price);
+          availability.push(data["availability_30"]);
 
           addHeat(lat, long, price, heatmapData, false);
         })
         .on("end", function() {
           addHeat(0, 0, 0, heatmapData, true);
 
-          require('./estimate.js')();
-          initCalculate(lats, longs, prices);
+          initCalculate(lats, longs, prices, availability);
 
           console.log("price data sent");
           listingsInfo(listings, neighbourhoods);

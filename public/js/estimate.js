@@ -3,6 +3,7 @@ var autocomplete;
 var otherLats = [];
 var otherLongs = [];
 var otherPrices = [];
+var otherAvailability = [];
 
 var R = 6371;  //radius of earth in km
 
@@ -20,10 +21,11 @@ function initAutocomplete() {
   console.log("autocomplete added");
 }
 
-function initCalculate(lats, longs, prices) {
+function initCalculate(lats, longs, prices, availability) {
   otherLats = lats;
   otherLongs = longs;
   otherPrices = prices;
+  otherAvailability = availability;
 }
 
 function calculateCost() {
@@ -33,10 +35,10 @@ function calculateCost() {
   var myLat = place.geometry.location.lat();
   var myLong = place.geometry.location.lng();
 
-  var cost = 0;
-  var costTwo = 0;
+  var dailyRate = 0;
+  var weeklyRevenue = 0;
 
-  var
+  var averagePriceRate = 0;
   var numListings = 0;
 
   for (var i = 0; i < otherLats.length; i++) {
@@ -56,15 +58,23 @@ function calculateCost() {
     //consider a listing a competitor if it is within 1 km
     if (distance <= 1) {
 
-      //calculate amount of money made by listing in next 90 days
-      
+      //calculate amount of money made by listing in the next month
+      var numberOfBookedDays = 30-otherAvailability[i];
+      var profitMade = numberOfBookedDays * prices[i];
+      var averageProfitPerDay = profitMade / 30;
+
+      //average how much each listing makes in a week, then average for all listings
+      weeklyRevenue += averageProfitPerDay * 7;
 
       numListings++;
     }
   }
 
-  document.getElementById("tablePrice").innerHTML = '$' + parseFloat(Math.round(cost * 100) / 100).toFixed(2);
-  document.getElementById("tablePriceTwo").innerHTML = '$' + parseFloat(Math.round(costTwo * 100) / 100).toFixed(2);
+  dailyRate *= 0.75;
+  weeklyRevenue /= numListings;
+
+  document.getElementById("tablePrice").innerHTML = '$' + parseFloat(Math.round(dailyRate * 100) / 100).toFixed(2);
+  document.getElementById("tablePriceTwo").innerHTML = '$' + parseFloat(Math.round(weeklyRevenue * 100) / 100).toFixed(2);
 }
 
 // Bias the autocomplete object to the user's geographical location,
