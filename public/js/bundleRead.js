@@ -53125,8 +53125,8 @@ module.exports = function() {
 
       var options = {
         chart: {
-          title: 'Company Performance',
-          subtitle: 'Sales, Expenses, and Profit: 2014-2017',
+          title: 'District Popularity',
+          subtitle: 'Data Taken in September',
         },
         bars: 'horizontal' // Required for Material Bar Charts.
       };
@@ -54262,13 +54262,19 @@ function listingsPrice(xAxis) {
           //find neighbourhoods
           for(var i = 0; i < xAxis.length; i++) {
 
-            if (data["host_neighbourhood"] == xAxis[i]) {
+            if (data["neighbourhood_cleansed"] == xAxis[i]) {
+
+              console.log("I FOUND IT");
 
               //to-do: percent booked
 
               numListings[i]++;
 
               i = xAxis.length;
+            }
+
+            else {
+              console.log((data["neighbourhood_cleansed"] == xAxis[i]) + " and " + data["neighbourhood_cleansed"] +" , " + xAxis[i]);
             }
           }
 

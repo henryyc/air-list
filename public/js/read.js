@@ -34,8 +34,6 @@ function neighbours() {
         })
         .on("data", function(data) {
           xAxis.push(data["neighbourhood"]);
-          xAxis[i] = [];
-          i++;
         })
         .on("end", function() {
 
@@ -94,13 +92,19 @@ function listingsPrice(xAxis) {
           //find neighbourhoods
           for(var i = 0; i < xAxis.length; i++) {
 
-            if (data["host_neighbourhood"] == xAxis[i]) {
+            if (data["neighbourhood_cleansed"] == xAxis[i]) {
+
+              console.log("I FOUND IT");
 
               //to-do: percent booked
 
               numListings[i]++;
 
               i = xAxis.length;
+            }
+
+            else {
+              console.log((data["neighbourhood_cleansed"] == xAxis[i]) + " and " + data["neighbourhood_cleansed"] +" , " + xAxis[i]);
             }
           }
 
