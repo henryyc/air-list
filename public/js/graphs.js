@@ -23,7 +23,7 @@ module.exports = function() {
   }
 
   //create interactive graph
-  this.graphPopularity = function(neighbourhoods, numListings, percentBooked) {
+  this.graphPopularity = function(neighbourhoods, numListings, numBooked) {
 
     google.charts.load('current', {
       'packages': ['bar']
@@ -31,20 +31,12 @@ module.exports = function() {
     google.charts.setOnLoadCallback(drawChart);
 
     var formatted = [];
-    formatted.push(['Neighbourhood', 'Total Number of Listings', 'Percent of Listings Booked']);
+    formatted.push(['Neighbourhood', 'Total Number of Listings', 'Number of Listings Booked']);
 
     for(var i = 0; i < neighbourhoods.length; i++)
-      formatted.push([neighbourhoods[i], numListings[i], percentBooked[i]]);
+      formatted.push([neighbourhoods[i], numListings[i], numBooked[i]]);
 
     function drawChart() {
-
-      /*var data = google.visualization.arrayToDataTable([
-        ['Year', 'Sales', 'Expenses', 'Profit'],
-        ['2014', 1000, 400, 200],
-        ['2015', 1170, 460, 250],
-        ['2016', 660, 1120, 300],
-        ['2017', 1030, 540, 350]
-      ]);*/
 
       console.log(formatted);
       var data = google.visualization.arrayToDataTable(formatted);

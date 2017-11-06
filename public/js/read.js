@@ -61,10 +61,10 @@ function listingsPrice(xAxis) {
       var availability = [];
 
       var numListings = [];
-      var percentBooked = [];
+      var numBooked = [];
       for (var i = 0; i < xAxis.length; i++) {
         numListings.push(0);
-        percentBooked.push(0);
+        numBooked.push(0);
       }
 
       var CSV_STRING = body;
@@ -79,6 +79,7 @@ function listingsPrice(xAxis) {
           var lat = data["latitude"];
           var long = data["longitude"];
           var temp = data["price"];
+          var ava = data["availability_90"];
 
           //get rid of any dollar signs, commas, or extra spaces
           var price = Number(temp.replace(/[^0-9\.-]+/g, ""));
@@ -87,24 +88,17 @@ function listingsPrice(xAxis) {
           lats.push(lat);
           longs.push(long);
           prices.push(price);
-          availability.push(data["availability_90"]);
+          availability.push(ava);
 
           //find neighbourhoods
           for(var i = 0; i < xAxis.length; i++) {
 
             if (data["neighbourhood_cleansed"] == xAxis[i]) {
 
-              console.log("I FOUND IT");
-
-              //to-do: percent booked
-
+              numBooked[i] += 90 - ava;
               numListings[i]++;
 
               i = xAxis.length;
-            }
-
-            else {
-              console.log((data["neighbourhood_cleansed"] == xAxis[i]) + " and " + data["neighbourhood_cleansed"] +" , " + xAxis[i]);
             }
           }
 
@@ -115,7 +109,7 @@ function listingsPrice(xAxis) {
 
           initCalculate(lats, longs, prices, availability);
 
-          graphPopularity(xAxis, numListings, percentBooked);
+          graphPopularity(xAxis, numListings, numBooked);
 
           console.log("price data sent");
           listingsInfo(listings, neighbourhoods);
