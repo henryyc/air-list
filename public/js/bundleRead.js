@@ -53083,7 +53083,7 @@ module.exports = function() {
   this.initMap = function() {
 
     costMap = new google.maps.Map(document.getElementById('cost_map'), {
-      zoom: 14,
+      zoom: 12,
       center: new google.maps.LatLng(37.7749, -122.4194),
     });
 
@@ -53093,6 +53093,7 @@ module.exports = function() {
     });
 
     console.log("initial maps created");
+    document.getElementById('loadPercent').innerHTML = 'Almost done...';
   }
 
   //create interactive graph
@@ -53121,8 +53122,7 @@ module.exports = function() {
 
       heatmap.setMap(costMap);
       console.log("heat costs layered");
-      document.getElementById('loadPercent').innerHTML = 'Almost done...';
-      //document.getElementById('loadPercent').innerHTML = 'Press &#39Learn more&#39 to get started.';
+      document.getElementById('loadPercent').innerHTML = 'Press &#39Learn more&#39 to get started.';
     }
 
     //continue adding to dataset

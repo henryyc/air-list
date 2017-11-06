@@ -59,7 +59,7 @@ function calculateCost() {
 
       //calculate amount of money made by listing in the next 3 months
       var numberOfBookedDays = 90 - otherAvailability[i];
-      var profitMade = numberOfBookedDays * prices[i];
+      var profitMade = numberOfBookedDays * otherPrices[i];
       var averageProfitPerDay = profitMade / 90;
 
       //average how much each listing makes in a week, then average for all listings
@@ -70,6 +70,7 @@ function calculateCost() {
   }
 
   dailyRate *= 0.75;
+  console.log(weeklyRevenue);
   weeklyRevenue /= numListings;
 
   document.getElementById("tablePrice").innerHTML = '$' + parseFloat(Math.round(dailyRate * 100) / 100).toFixed(2);
