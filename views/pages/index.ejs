@@ -46,7 +46,7 @@
         <br><br><br><br><br><br><br><br><br><br><br><br><br><br>
 
         <h2>Cost</h2>
-        <p>Heatmap of San Francisco, based off prices of AirBnBs in each location.</p>
+        <p>Heatmap of San Francisco, based off AirBnB prices for each listing.</p>
         <br><br>
     </section>
 
@@ -59,7 +59,8 @@
         <br><br><br><br><br><br><br><br><br><br><br><br><br><br>
 
         <h2>Popularity</h2>
-        <p>Bubble chart of San Francisco districts, based off number of listings, percent of booked listings, and total number of booked listings</p>
+        <p>Bubble chart of San Francisco districts, based off number of listings, percent of booked listings, and total number of booked listings.</p>
+        <p>Hover over bubbles for more detailed information.</p>
         <br><br>
       </div>
     </section>
@@ -85,9 +86,10 @@
     <section id="four" class="wrapper style2 fullscreen fade-up">
       <div class="inner">
         <h2>Analyzer</h2>
+        <p>Thinking about having your own AirBnB?</p>
         <p>Enter your address to find out:
-          <br>1. Our recommended daily rent to maximize bookings and profit.
-          <br>2. Your estimated weekly average income in the area.
+          <br>1. Your estimated weekly average income in the area.
+          <br>2. Our recommended price per night to help you maximize bookings and profit.
         </p>
 
         <div id="locationField">
@@ -103,17 +105,16 @@
           <tbody>
             <tr>
               <!--price estimation-->
+              <td>Estimated Weekly Income:</td>
+              <td>
+                <div id="tablePriceTwo">n/a</div>
+              </td>
+            </tr>
+            <tr>
+              <!--bookings optimization-->
               <td>Recommended Daily Rate:</td>
               <td>
                 <div id="tablePrice">n/a</div>
-              </td>
-            </tr>
-
-            <tr>
-              <!--bookings optimization-->
-              <td>Estimated Weekly Average Income:</td>
-              <td>
-                <div id="tablePriceTwo">n/a</div>
               </td>
             </tr>
           </tbody>
