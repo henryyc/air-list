@@ -55,12 +55,9 @@ function listingsPrice(xAxis) {
 
       var csv = require("fast-csv");
       var heatmapData = [];
-      var priceData = new Array(xAxis.length); //keep track of price for each neighbourhood
-      var priceFreq = new Array(xAxis.length); //keep track of number of listings in each neighbourhood
-      for (var i = 0; i < priceData.length; i++) {
-        priceData[i] = 0;
-        priceFreq[i] = 0;
-      }
+      var lats = [];
+      var longs = [];
+      var prices = [];
 
       var CSV_STRING = body;
 
@@ -78,15 +75,18 @@ function listingsPrice(xAxis) {
           //get rid of any dollar signs, commas, or extra spaces
           var price = Number(temp.replace(/[^0-9\.-]+/g, ""));
 
-          //add to basic price statistics
-          //  var neighbourhood = data["host_neighbourhood"];
+          //add to basic price statistics for cost estimation
+          lats.push(lat);
+          longs.push(long);
+          prices.push(price);
 
           addHeat(lat, long, price, heatmapData, false);
-          //addMarker(data);
         })
         .on("end", function() {
-          graphPrices(xAxis, priceData, priceFreq);
           addHeat(0, 0, 0, heatmapData, true);
+
+          require('./estimate.js')();
+          initCalculate(lats, longs, prices);
 
           console.log("price data sent");
           listingsInfo(listings, neighbourhoods);
@@ -109,7 +109,7 @@ function listingsInfo(listings, neighbourhoods) {
           headers: true
         })
         .on("data", function(data) {
-          addMarker(data["latitude"], data["longitude"], data["name"], data["summary"], data["listing_url"]);
+          addMarker(data["latitude"], data["longitude"], data["name"], data["listing_url"]);
         })
         .on("end", function() {
             console.log("marker data sent");

@@ -62,20 +62,11 @@ module.exports = function() {
   }
 
   //add a marker to listing map
-  this.addMarker = function(lat, long, name, summary, url) {
+  this.addMarker = function(lat, long, name, url) {
     var contentString = '<div id="content">' +
-      '<div id="siteNotice">' +
-      '</div>' +
-      '<h1 id="firstHeading" class="firstHeading" style="color:black">' + name + '</h1>' +
-      '<div id="bodyContent">' +
-
-      '<p style="color:black">' + summary +
-
-      '<br />More info: ' + url + '</p>' +
-
-      '</div>' +
+      '<p style="color:black"><b>' + name + '</b><br />' +
+      '<p style="color:black"><i>More info: ' + url + '</i></p>' +
       '</div>';
-
 
     var infowindow = new google.maps.InfoWindow({
       content: '<p style="color:black;">' + contentString + '</p>'
