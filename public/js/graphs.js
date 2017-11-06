@@ -98,7 +98,8 @@ module.exports = function() {
           }
         },
         backgroundColor: '#b74e91',
-        is3D: true
+        is3D: true,
+        animation: {"startup": true}
       };
 
       var chart = new google.visualization.BubbleChart(document.getElementById('series_chart_div'));
