@@ -18,22 +18,51 @@ module.exports = function() {
       center: new google.maps.LatLng(37.7749, -122.4194),
     });
 
-    console.log("initial maps created");
+    console.log("cost map created");
     document.getElementById('loadPercent').innerHTML = 'Almost done...';
   }
 
   //create interactive graph
-  this.graphPrices = function(horiAxis, priceData, priceFreq) {
+  this.graphPopularity = function(neighbourhoods, numListings, percentBooked) {
 
-    var freq = new Array(horiAxis.length);
-    for (var i = 0; i < freq.length; i++){
-       freq[i] = priceData[i]/priceFreq[i];
-       console.log(freq[i]);
+    google.charts.load('current', {
+      'packages': ['bar']
+    });
+    google.charts.setOnLoadCallback(drawChart);
+
+    var formatted = [];
+    formatted.push(['Neighbourhood', 'Total Number of Listings', 'Percent of Listings Booked']);
+
+    for(var i = 0; i < neighbourhoods.length; i++)
+      formatted.push([neighbourhoods[i], numListings[i], percentBooked[i]]);
+
+    function drawChart() {
+
+      /*var data = google.visualization.arrayToDataTable([
+        ['Year', 'Sales', 'Expenses', 'Profit'],
+        ['2014', 1000, 400, 200],
+        ['2015', 1170, 460, 250],
+        ['2016', 660, 1120, 300],
+        ['2017', 1030, 540, 350]
+      ]);*/
+
+      console.log(formatted);
+      var data = google.visualization.arrayToDataTable(formatted);
+
+      var options = {
+        chart: {
+          title: 'Company Performance',
+          subtitle: 'Sales, Expenses, and Profit: 2014-2017',
+        },
+        bars: 'horizontal' // Required for Material Bar Charts.
+      };
+
+      var chart = new google.charts.Bar(document.getElementById('barchart_material'));
+
+      chart.draw(data, google.charts.Bar.convertOptions(options));
     }
 
-    //insert d3 graph
-
-    console.log("cost graph created");
+    console.log("popularity graph created");
   }
 
   //create heatmap layer for cost map

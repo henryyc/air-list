@@ -56,10 +56,18 @@ function listingsPrice(xAxis) {
 
       var csv = require("fast-csv");
       var heatmapData = [];
+
       var lats = [];
       var longs = [];
       var prices = [];
       var availability = [];
+
+      var numListings = [];
+      var percentBooked = [];
+      for (var i = 0; i < xAxis.length; i++) {
+        numListings.push(0);
+        percentBooked.push(0);
+      }
 
       var CSV_STRING = body;
 
@@ -83,12 +91,27 @@ function listingsPrice(xAxis) {
           prices.push(price);
           availability.push(data["availability_90"]);
 
+          //find neighbourhoods
+          for(var i = 0; i < xAxis.length; i++) {
+
+            if (data["host_neighbourhood"] == xAxis[i]) {
+
+              //to-do: percent booked
+
+              numListings[i]++;
+
+              i = xAxis.length;
+            }
+          }
+
           addHeat(lat, long, price, heatmapData, false);
         })
         .on("end", function() {
           addHeat(0, 0, 0, heatmapData, true);
 
           initCalculate(lats, longs, prices, availability);
+
+          graphPopularity(xAxis, numListings, percentBooked);
 
           console.log("price data sent");
           listingsInfo(listings, neighbourhoods);
