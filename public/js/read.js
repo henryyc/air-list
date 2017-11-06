@@ -50,7 +50,7 @@ function listingsPrice(xAxis) {
   request.get('https://raw.githubusercontent.com/henryyc/air-list/master/data/listing_info_split.csv', function(error, response, body) {
     if (!error && response.statusCode == 200) {
 
-      require('./estimate.js')();
+      require('./calculations.js')();
       require('./graphs.js')();
       initMap();
 
@@ -81,7 +81,7 @@ function listingsPrice(xAxis) {
           lats.push(lat);
           longs.push(long);
           prices.push(price);
-          availability.push(data["availability_30"]);
+          availability.push(data["availability_90"]);
 
           addHeat(lat, long, price, heatmapData, false);
         })
@@ -101,22 +101,7 @@ function listingsInfo(listings, neighbourhoods) {
   request.get('https://raw.githubusercontent.com/henryyc/air-list/master/data/lat_long_info.csv', function(error, response, body) {
     if (!error && response.statusCode == 200) {
 
-      //go through the csv line by line to graph the markers one by one
-      var csv = require("fast-csv");
-      var CSV_STRING = body;
-
-      console.log("marker data start");
-      csv
-        .fromString(CSV_STRING, {
-          headers: true
-        })
-        .on("data", function(data) {
-          addMarker(data["latitude"], data["longitude"], data["name"], data["listing_url"]);
-        })
-        .on("end", function() {
-            console.log("marker data sent");
-            console.log("finished");
-        });
+      console.log("ok");
     }
   });
 }
