@@ -68,6 +68,7 @@ function calculateCost() {
       numListings++;
 
       //to maximize profit from daily rent: find the top 10 richest listings in competitive distance, and rent 10% less than them
+      
     }
   }
 
