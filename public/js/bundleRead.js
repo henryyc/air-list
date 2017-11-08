@@ -53075,9 +53075,10 @@ module.exports = function() {
 module.exports = function() {
 
   var costMap;
-  var listingsMap;
   var geocoder;
-  var currAxis = 0;
+  var currAxisPopular = 0;
+  var currAxisInvest = 0;
+  var buttonsCreated = false;
 
   //create a default cost map and listings map
   this.initMap = function() {
@@ -53087,13 +53088,33 @@ module.exports = function() {
       center: new google.maps.LatLng(37.7749, -122.4194),
     });
 
-    listingsMap = new google.maps.Map(document.getElementById('listings_map'), {
-      zoom: 15,
-      center: new google.maps.LatLng(37.7749, -122.4194),
-    });
-
     console.log("cost map created");
     document.getElementById('loadPercent').innerHTML = 'Almost done...';
+  }
+
+  //create heatmap layer for cost map
+  this.addHeat = function(lat, long, price, heatmapData, complete) {
+
+    //if dataset is complete
+    if (complete) {
+
+      var heatmap = new google.maps.visualization.HeatmapLayer({
+        data: heatmapData
+      })
+
+      heatmap.setMap(costMap);
+      console.log("heat costs layered");
+      document.getElementById('loadPercent').innerHTML = 'Press &#39Learn more&#39 to get started.';
+    }
+
+    //continue adding to dataset
+    else {
+      var weight = {
+        location: new google.maps.LatLng(lat, long),
+        weight: parseFloat(price)
+      };
+      heatmapData.push(weight);
+    }
   }
 
   //create interactive graph
@@ -53126,59 +53147,17 @@ module.exports = function() {
     var options = {
       title: 'Correlation between number of listings in a district, percent of booked listings ' +
         'and number of booked listings (2017)',
-      titleTextStyle: {
-        color: 'white',
-        fontName: 'sans-serif'
-      },
       hAxis: {
-        title: 'Total Amount of Listings',
-        textStyle: {
-          color: 'white',
-          fontName: 'sans-serif'
-        },
-        titleTextStyle: {
-          color: 'white',
-          fontName: 'sans-serif'
-        },
-        gridlines: {
-          color: 'white',
-          fontName: 'sans-serif'
-        },
-        baselineColor: 'white'
+        title: 'Total Amount of Listings'
       },
       vAxis: {
-        title: 'Percent of Booked Listings',
-        textStyle: {
-          color: 'white',
-          fontName: 'sans-serif'
-        },
-        titleTextStyle: {
-          color: 'white',
-          fontName: 'sans-serif'
-        },
-        gridlines: {
-          color: 'white',
-          fontName: 'sans-serif'
-        },
-        baselineColor: 'white'
+        title: 'Percent of Booked Listings'
       },
       bubble: {
         textStyle: {
-          color: 'white',
           fontSize: 18
-        },
-        titleTextStyle: {
-          color: 'white',
-          fontName: 'sans-serif'
         }
       },
-      legend: {
-        textStyle: {
-          color: 'white',
-          fontName: 'sans-serif'
-        }
-      },
-      backgroundColor: '#b74e91',
       is3D: true,
       animation: {
         "startup": true,
@@ -53186,69 +53165,9 @@ module.exports = function() {
         easing: 'out'
       }
     };
-    var optionsFlipped = {
-      title: 'Correlation between number of listings in a district, percent of booked listings ' +
-        'and number of booked listings (2017)',
-      titleTextStyle: {
-        color: 'white',
-        fontName: 'sans-serif'
-      },
-      vAxis: {
-        title: 'Total Amount of Listings',
-        textStyle: {
-          color: 'white',
-          fontName: 'sans-serif'
-        },
-        titleTextStyle: {
-          color: 'white',
-          fontName: 'sans-serif'
-        },
-        gridlines: {
-          color: 'white',
-          fontName: 'sans-serif'
-        },
-        baselineColor: 'white'
-      },
-      hAxis: {
-        title: 'Percent of Booked Listings',
-        textStyle: {
-          color: 'white',
-          fontName: 'sans-serif'
-        },
-        titleTextStyle: {
-          color: 'white',
-          fontName: 'sans-serif'
-        },
-        gridlines: {
-          color: 'white',
-          fontName: 'sans-serif'
-        },
-        baselineColor: 'white'
-      },
-      bubble: {
-        textStyle: {
-          color: 'white',
-          fontSize: 18
-        },
-        titleTextStyle: {
-          color: 'white',
-          fontName: 'sans-serif'
-        }
-      },
-      legend: {
-        textStyle: {
-          color: 'white',
-          fontName: 'sans-serif'
-        }
-      },
-      backgroundColor: '#b74e91',
-      is3D: true,
-      animation: {
-        "startup": true,
-        duration: 1000,
-        easing: 'out'
-      }
-    };
+    var optionsFlipped = options;
+    optionsFlipped['hAxis'] = options['vAxis'];
+    optionsFlipped['vAxis'] = options['hAxis'];
     allOptions.push(options);
     allOptions.push(optionsFlipped);
 
@@ -53256,7 +53175,7 @@ module.exports = function() {
 
       var button = document.getElementById('b1');
       var chart = new google.visualization.BubbleChart(document.getElementById('series_chart_div'));
-      var data = google.visualization.arrayToDataTable(completeData[currAxis]);
+      var data = google.visualization.arrayToDataTable(completeData[currAxisPopular]);
 
       button.disabled = true;
       google.visualization.events.addListener(chart, 'ready',
@@ -53265,61 +53184,100 @@ module.exports = function() {
         });
 
       button.onclick = function() {
-        currAxis = 1 - currAxis; //flip from 0 to 1 and vice versa
+        currAxisPopular = 1 - currAxisPopular; //flip from 0 to 1 and vice versa
         drawSeriesChart();
       }
 
-      chart.draw(data, allOptions[currAxis]);
+      chart.draw(data, allOptions[currAxisPopular]);
     }
 
     console.log("popularity graph created");
   }
 
-  //create heatmap layer for cost map
-  this.addHeat = function(lat, long, price, heatmapData, complete) {
+  //create investment graph
+  this.graphInvestment = function(neighbourhoods, lats, longs, prices, availability, districtListings) {
+    google.charts.load('current', {
+      'packages': ['corechart']
+    });
+    google.charts.setOnLoadCallback(drawChart);
 
-    //if dataset is complete
-    if (complete) {
+    var allOptions = [];
+    var allButtons = [];
 
-      var heatmap = new google.maps.visualization.HeatmapLayer({
-        data: heatmapData
-      })
-
-      heatmap.setMap(costMap);
-      console.log("heat costs layered");
-      document.getElementById('loadPercent').innerHTML = 'Press &#39Learn more&#39 to get started.';
+    var options = {
+      title: 'Long Term AirBnB Investment in ',
+      hAxis: {
+        title: 'Year',
+        titleTextStyle: {
+          color: '#333'
+        }
+      },
+      vAxis: {
+        title: 'Projected Earnings',
+        minValue: 0
+      },
+      is3D: true,
+      animation: {
+        "startup": true,
+        duration: 1000,
+        easing: 'out'
+      }
+    };
+    for (var i = 0; i < neighbourhoods.length; i++) {
+      options['title'] = 'Long Term AirBnB Investment in ' + neighbourhoods[i];
+      allOptions.push(options);
     }
 
-    //continue adding to dataset
-    else {
-      var weight = {
-        location: new google.maps.LatLng(lat, long),
-        weight: parseFloat(price)
-      };
-      heatmapData.push(weight);
+    var completeData = [];
+    //used TrustedChoice example of a P-to-R ratio of 16.7 (purchasing price to annual rent)
+    for (var j = 0; j < lats.length; j++) {
+
+      //help
+      if (districtListings[i] == neighbourhoods[i]) {
+
+      }
     }
-  }
 
-  //add a marker to listing map
-  this.addMarker = function(lat, long, name, url) {
-    var contentString = '<div id="content">' +
-      '<p style="color:black"><b>' + name + '</b><br />' +
-      '<p style="color:black"><i>More info: ' + url + '</i></p>' +
-      '</div>';
+    function drawChart() {
 
-    var infowindow = new google.maps.InfoWindow({
-      content: '<p style="color:black;">' + contentString + '</p>'
-    });
+      //make buttons for every district
+      if (!buttonsCreated) {
 
-    var marker = new google.maps.Marker({
-      position: new google.maps.LatLng(lat, long),
-      map: listingsMap,
-      title: name
-    });
+        //button 'i' relates to neighbourhood 'i', who's data is stored in completeData's 'i'
+        for (var i = 0; i < neighbourhoods.length; i++) {
+          var btn = document.createElement('button');
+          btn.className = 'button small';
+          var label = document.createTextNode(neighbourhoods[i].substring(0, 8)); //lucky 8
+          btn.appendChild(label);
+          document.getElementById('buttons').appendChild(btn);
 
-    marker.addListener('click', function() {
-      infowindow.open(listingsMap, marker);
-    });
+          allButtons.push(btn);
+        }
+
+        buttonsCreated = true;
+      }
+
+      var chart = new google.visualization.AreaChart(document.getElementById('chart_div'));
+      /*var data = google.visualization.arrayToDataTable(completeData[currAxisInvest]);
+
+      for (var i = 0; i < allButtons.length; i++) {
+        allButtons[i].onclick = function() {
+          drawSeriesChart();
+        }
+      }
+
+      chart.draw(data, allOptions[currAxisInvest]);*/
+
+      var data = google.visualization.arrayToDataTable([
+        ['Year', 'Sales', 'Expenses'],
+        ['2013', 1000, 400],
+        ['2014', 1170, 460],
+        ['2015', 660, 1120],
+        ['2016', 1030, 540]
+      ]);
+
+      chart.draw(data, options);
+    }
   }
 }
 
@@ -54364,6 +54322,8 @@ function listingsPrice(xAxis) {
       var prices = [];
       var availability = [];
 
+      var listingDistricts = [];
+
       var numListings = [];
       var numBooked = [];
       for (var i = 0; i < xAxis.length; i++) {
@@ -54384,6 +54344,7 @@ function listingsPrice(xAxis) {
           var long = data["longitude"];
           var temp = data["price"];
           var ava = data["availability_90"];
+          var district = data["neighbourhood_cleansed"];
 
           //get rid of any dollar signs, commas, or extra spaces
           var price = Number(temp.replace(/[^0-9\.-]+/g, ""));
@@ -54397,7 +54358,7 @@ function listingsPrice(xAxis) {
           //find neighbourhoods
           for(var i = 0; i < xAxis.length; i++) {
 
-            if (data["neighbourhood_cleansed"] == xAxis[i]) {
+            if (district == xAxis[i]) {
 
               numBooked[i] += 90 - ava;
               numListings[i]++;
@@ -54406,6 +54367,7 @@ function listingsPrice(xAxis) {
             }
           }
 
+          listingDistricts.push(district);
           addHeat(lat, long, price, heatmapData, false);
         })
         .on("end", function() {
@@ -54414,6 +54376,8 @@ function listingsPrice(xAxis) {
           initCalculate(lats, longs, prices, availability);
 
           graphPopularity(xAxis, numListings, numBooked);
+
+          graphInvestment(xAxis, lats, longs, prices, availability, districtListings);
 
           console.log("price data sent");
           listingsInfo(listings, neighbourhoods);

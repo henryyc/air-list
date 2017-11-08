@@ -8,6 +8,7 @@ Assumptions
 ======
 *From the listings data, I assumed that if a listing was not available for any amount of time, that meant it was booked.*
 *When using booking data, I used data for the next 90 days. I felt a month or two is too short, and a year is too long.*
+*For the investment calculation, I used [TrustedChoice's](https://www.trustedchoice.com/insurance-articles/home-family/buying-a-condo-or-rent/) example of a Price to Annual Rent ratio of 16.7*
 
 Features
 ======

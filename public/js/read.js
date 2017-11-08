@@ -60,6 +60,8 @@ function listingsPrice(xAxis) {
       var prices = [];
       var availability = [];
 
+      var listingDistricts = [];
+
       var numListings = [];
       var numBooked = [];
       for (var i = 0; i < xAxis.length; i++) {
@@ -80,6 +82,7 @@ function listingsPrice(xAxis) {
           var long = data["longitude"];
           var temp = data["price"];
           var ava = data["availability_90"];
+          var district = data["neighbourhood_cleansed"];
 
           //get rid of any dollar signs, commas, or extra spaces
           var price = Number(temp.replace(/[^0-9\.-]+/g, ""));
@@ -93,7 +96,7 @@ function listingsPrice(xAxis) {
           //find neighbourhoods
           for(var i = 0; i < xAxis.length; i++) {
 
-            if (data["neighbourhood_cleansed"] == xAxis[i]) {
+            if (district == xAxis[i]) {
 
               numBooked[i] += 90 - ava;
               numListings[i]++;
@@ -102,6 +105,7 @@ function listingsPrice(xAxis) {
             }
           }
 
+          listingDistricts.push(district);
           addHeat(lat, long, price, heatmapData, false);
         })
         .on("end", function() {
@@ -110,6 +114,8 @@ function listingsPrice(xAxis) {
           initCalculate(lats, longs, prices, availability);
 
           graphPopularity(xAxis, numListings, numBooked);
+
+          graphInvestment(xAxis, lats, longs, prices, availability, districtListings);
 
           console.log("price data sent");
           listingsInfo(listings, neighbourhoods);
