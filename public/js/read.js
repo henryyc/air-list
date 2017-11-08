@@ -60,7 +60,7 @@ function listingsPrice(xAxis) {
       var prices = [];
       var availability = [];
 
-      var listingDistricts = [];
+      var districtListings = [];
 
       var numListings = [];
       var numBooked = [];
@@ -105,7 +105,7 @@ function listingsPrice(xAxis) {
             }
           }
 
-          listingDistricts.push(district);
+          districtListings.push(district);
           addHeat(lat, long, price, heatmapData, false);
         })
         .on("end", function() {
