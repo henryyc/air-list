@@ -274,7 +274,7 @@ module.exports = function() {
         deviant = 1 + deviant * gainOrLoss;
 
         //approx $120 in cleaning cost per booking; https://www.homeadvisor.com/cost/cleaning-services/, and about a week average stay per booking
-        var numBookings = (90 - availabilityNextNinetyDays[j]) * 90 / 365 / 7;
+        var numBookings = (90 - availabilityNextNinetyDays[j]) / 90 * 365 / 7;
         expensesPerNeighbourhoodPerYear[i][j] = amntOfPurchasableListingsPerNeighbourhood[i] * 120 * numBookings * deviant;
 
         //only calculate until you have broken even
