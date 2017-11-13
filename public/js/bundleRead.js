@@ -53405,17 +53405,10 @@ module.exports = function() {
 
     function drawChart() {
 
-      var button = document.getElementById('nextDistrict');
       var chart = new google.visualization.AreaChart(document.getElementById('chart_div'));
       var data = google.visualization.arrayToDataTable(completeData[currNeighbourhoodInvest]);
 
-      button.disabled = true;
-      google.visualization.events.addListener(chart, 'ready',
-        function() {
-          button.disabled = false;
-        });
-
-      button.onclick = function() {
+      function listQ() {
         var e = document.getElementById("menu");
         currNeighbourhoodInvest = e.options[e.selectedIndex].value;
         data = google.visualization.arrayToDataTable(completeData[e.options[e.selectedIndex].value]);
@@ -53423,6 +53416,8 @@ module.exports = function() {
 
         drawChart();
       }
+      document.getElementById("menu").addEventListener("change", listQ);
+
       chart.draw(data, options);
     }
   }

@@ -16,7 +16,7 @@ Features
 1. Data Visualization:
     * Cost: Heatmap based off of all provided AirBnB listings. Used the Google Maps Visualization API.
     * Popularity: Bubble chart based off of total number of listings per district, and total & percent of bookings per district.
-    * Investment: Area Chart, graphed district by district. Can change the currently graphed district with a button and dropdown menu.
+    * Investment: Area Chart, graphed district by district. Can change the currently graphed district with a dropdown menu.
     
 2. Price Estimation:
     * Find other listings within 1 km distance, and average their weekly profit in the next 90 days.
