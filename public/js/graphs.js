@@ -261,6 +261,10 @@ module.exports = function() {
 
         //use first year's earnings as standard/average
         revenuePerNeighbourhoodPerYear[i][j] = revenuePerNeighbourhoodPerYear[i][0] * deviant + revenuePerNeighbourhoodPerYear[i][j - 1];
+
+        //only calculate until you have broken even
+        if (revenuePerNeighbourhoodPerYear[i][j] >= expensesPerNeighbourhoodPerYear[i][0])
+          revenuePerNeighbourhoodPerYear[i] = revenuePerNeighbourhoodPerYear[i].slice(0, j + 1);
       }
 
       for (var j = 1; j < expensesPerNeighbourhoodPerYear[i].length; j++) {
@@ -275,6 +279,10 @@ module.exports = function() {
         //approx $120 in cleaning cost per booking; https://www.homeadvisor.com/cost/cleaning-services/, and about a week average stay per booking
         var numBookings = (90 - availabilityNextNinetyDays[j]) * 90 / 365 / 7;
         expensesPerNeighbourhoodPerYear[i][j] = amntOfPurchasableListingsPerNeighbourhood[i] * 120 * numBookings * deviant;
+
+        //only calculate until you have broken even
+        if (j + 1 >= revenuePerNeighbourhoodPerYear[i].length)
+          expensesPerNeighbourhoodPerYear[i] = expensesPerNeighbourhoodPerYear[i].slice(0, j + 1);
       }
     }
 
