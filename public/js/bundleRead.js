@@ -53166,10 +53166,27 @@ module.exports = function() {
         easing: 'out'
       }
     };
-    var optionsFlipped = options;
-    var temp = options['hAxis'];
-    optionsFlipped['hAxis'] = options['vAxis'];
-    optionsFlipped['vAxis'] = temp;
+    var optionsFlipped = {
+      title: 'Correlation between number of listings in a district, percent of booked listings ' +
+        'and number of booked listings (2017)',
+      hAxis: {
+        title: 'Percent of Booked Listings'
+      },
+      vAxis: {
+        title: 'Total Amount of Listings'
+      },
+      bubble: {
+        textStyle: {
+          fontSize: 18
+        }
+      },
+      is3D: true,
+      animation: {
+        "startup": true,
+        duration: 1000,
+        easing: 'out'
+      }
+    };
     allOptions.push(options);
     allOptions.push(optionsFlipped);
 
