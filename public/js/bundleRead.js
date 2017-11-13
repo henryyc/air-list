@@ -53133,11 +53133,11 @@ module.exports = function() {
     formattedFlipped.push(['ID', '% Booked', 'Listings', 'District', 'Number of Booked Listings']);
 
     for (var i = 0; i < neighbourhoods.length; i++)
-      formatted.push([neighbourhoods[i].substring(0, 3).toUpperCase(), numListings[i], (numBooked[i] / (90 * numListings[i])),
+      formatted.push([neighbourhoods[i].substring(0, 3).toUpperCase(), numListings[i], (numBooked[i] / (90 * numListings[i])) * 100,
         neighbourhoods[i], numBooked[i]
       ]);
     for (var i = 0; i < neighbourhoods.length; i++)
-      formattedFlipped.push([neighbourhoods[i].substring(0, 3).toUpperCase(), (numBooked[i] / (90 * numListings[i])), numListings[i],
+      formattedFlipped.push([neighbourhoods[i].substring(0, 3).toUpperCase(), (numBooked[i] / (90 * numListings[i])) * 100, numListings[i],
         neighbourhoods[i], numBooked[i]
       ]);
 
