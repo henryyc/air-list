@@ -299,6 +299,20 @@ module.exports = function() {
       completeData.push(formatted);
     }
 
+    //create dropdown menu
+    var div = document.querySelector("#container"),
+      frag = document.createDocumentFragment(),
+      select = document.createElement("select");
+
+    select.id = "menu";
+
+    for (var i = 0; i < neighbourhoods.length; i++) {
+      select.options.add(new Option(neighbourhoods[i], i, true, true));
+    }
+
+    frag.appendChild(select);
+    div.appendChild(frag);
+
     function drawChart() {
 
       var button = document.getElementById('nextDistrict');
@@ -312,9 +326,11 @@ module.exports = function() {
         });
 
       button.onclick = function() {
-        currNeighbourhoodInvest = (currNeighbourhoodInvest + 1) % neighbourhoods.length;
-        data = google.visualization.arrayToDataTable(completeData[currNeighbourhoodInvest]);
-        options['title'] = 'Long Term AirBnB Investment in ' + neighbourhoods[currNeighbourhoodInvest] + '';
+        var e = document.getElementById("menu");
+        currNeighbourhoodInvest = e.options[e.selectedIndex].value;
+        data = google.visualization.arrayToDataTable(completeData[e.options[e.selectedIndex].value]);
+        options['title'] = 'Long Term AirBnB Investment in ' + neighbourhoods[e.options[e.selectedIndex].value] + '';
+
         drawChart();
       }
       chart.draw(data, options);
