@@ -53222,11 +53222,8 @@ module.exports = function() {
       }
     };
 
-    //used TrustedChoice example of a P-to-R ratio of 16.7 (purchasing price to annual rent)
-    //find most profitable listings in each neighbourhood, up to 100 mil
-    //do it later bruh
-
     /* get the average cost to buy a listing in every neighbourhood */
+    //used TrustedChoice example of a P-to-R ratio of 16.7 (purchasing price to annual rent)
 
     //initiate variables
     var avgNeighbourhoodPurchasingPrice = [];

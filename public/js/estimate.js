@@ -68,13 +68,12 @@ function calculateCost() {
 
       numListings++;
 
-      //to maximize profit from daily rent: rent 10% less than average
       averagePriceRate += otherPrices[i];
     }
   }
 
   weeklyRevenue /= numListings;
-  averagePriceRate /= numListings;
+  averagePriceRate = averagePriceRate / numListings * .9; //to maximize profit from daily rent: rent 10% less than average
 
   document.getElementById("tablePrice").innerHTML = '$' + parseFloat(Math.round(averagePriceRate * 100) / 100).toFixed(2);
   document.getElementById("tablePriceTwo").innerHTML = '$' + parseFloat(Math.round(weeklyRevenue * 100) / 100).toFixed(2);
