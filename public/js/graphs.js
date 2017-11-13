@@ -5,6 +5,7 @@ module.exports = function() {
   var geocoder;
   var currAxisPopular = 0;
   var currNeighbourhoodInvest = 0;
+  var numYears = 40;
   var startingInvestmentCash = 100000000; //100 mil
 
   //create a default cost map and listings map
@@ -129,7 +130,7 @@ module.exports = function() {
     google.charts.setOnLoadCallback(drawChart);
 
     var options = {
-      title: 'Long Term AirBnB Investment in ',
+      title: 'Long Term AirBnB Investment in ' + neighbourhoods[currNeighbourhoodInvest],
       hAxis: {
         title: 'Year',
         titleTextStyle: {
@@ -137,7 +138,7 @@ module.exports = function() {
         }
       },
       vAxis: {
-        title: 'Projected Earnings',
+        title: 'Projected Cumulative Revenue in USD',
         minValue: 0
       },
       is3D: true,
@@ -186,9 +187,9 @@ module.exports = function() {
     /* get the average annual profit of a listing in every neighbourhood */
 
     //initiate variables
-    var avgNeighbourhoodAnnualProfitPerListing = [];
-    for (var i = 0; i < neighbourhoods.length; i++)
-      avgNeighbourhoodAnnualProfitPerListing.push(0);
+    var avgNeighbourhoodAnnualProfitPerListing = new Array(neighbourhoods.length);
+    for (var i = 0; i < avgNeighbourhoodAnnualProfitPerListing.length; i++)
+      avgNeighbourhoodAnnualProfitPerListing[i] = 0;
 
     //1. get total profit
     for (var i = 0; i < districtListings.length; i++) {
@@ -227,25 +228,20 @@ module.exports = function() {
 
     console.log("get investment average profit of investment");
 
-    /* calculate it over the next 30 years until profit is made, with random minor changes in profit every year */
+    /* calculate it over the next 40 years until profit is made, with minor changes in profit every year */
 
-    //initial cost and revenue
-    var revenuePerNeighbourhoodPerYear = Array.apply(null, new Array(neighbourhoods.length)).map(
-      Array.prototype.valueOf,
-      Array.apply(null, new Array(40)).map(
-        function() {
-          return 0;
-        }
-      )
-    );
-    var expensesPerNeighbourhoodPerYear = Array.apply(null, new Array(neighbourhoods.length)).map(
-      Array.prototype.valueOf,
-      Array.apply(null, new Array(40)).map(
-        function() {
-          return 0;
-        }
-      )
-    );
+    //initial cost and revenue matrix
+    var revenuePerNeighbourhoodPerYear = new Array(neighbourhoods.length);
+    var expensesPerNeighbourhoodPerYear = new Array(neighbourhoods.length);
+    for (var i = 0; i < neighbourhoods.length; i++) {
+      revenuePerNeighbourhoodPerYear[i] = new Array(numYears);
+      expensesPerNeighbourhoodPerYear[i] = new Array(numYears);
+
+      for (var j = 0; j < revenuePerNeighbourhoodPerYear[i].length; j++) {
+        revenuePerNeighbourhoodPerYear[i][j] = 0;
+        expensesPerNeighbourhoodPerYear[i][j] = 0;
+      }
+    }
 
     for (var i = 0; i < neighbourhoods.length; i++) {
       revenuePerNeighbourhoodPerYear[i][0] = amntOfPurchasableListingsPerNeighbourhood[i] * avgNeighbourhoodAnnualProfitPerListing[i];
@@ -282,7 +278,7 @@ module.exports = function() {
       }
     }
 
-    console.log(revenuePerNeighbourhoodPerYear[5][0] == revenuePerNeighbourhoodPerYear[16][0]);
+    console.log(revenuePerNeighbourhoodPerYear[5][0] == revenuePerNeighbourhoodPerYear[16][0] + ' broken dumb javascript');
 
     console.log("finish storing investment data");
 
