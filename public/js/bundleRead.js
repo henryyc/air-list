@@ -53356,8 +53356,6 @@ module.exports = function() {
       }
     }
 
-    console.log(revenuePerNeighbourhoodPerYear[5][0] == revenuePerNeighbourhoodPerYear[16][0] + ' broken dumb javascript');
-
     console.log("finish storing investment data");
 
     var completeData = [];
