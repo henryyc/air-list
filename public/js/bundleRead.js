@@ -53167,8 +53167,9 @@ module.exports = function() {
       }
     };
     var optionsFlipped = options;
+    var temp = options['hAxis'];
     optionsFlipped['hAxis'] = options['vAxis'];
-    optionsFlipped['vAxis'] = options['hAxis'];
+    optionsFlipped['vAxis'] = temp;
     allOptions.push(options);
     allOptions.push(optionsFlipped);
 
