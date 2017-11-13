@@ -53077,8 +53077,8 @@ module.exports = function() {
   var costMap;
   var geocoder;
   var currAxisPopular = 0;
-  var currAxisInvest = 0;
-  var buttonsCreated = false;
+  var currNeighbourhoodInvest = 0;
+  var startingInvestmentCash = 100000000; //100 mil
 
   //create a default cost map and listings map
   this.initMap = function() {
@@ -53195,14 +53195,11 @@ module.exports = function() {
   }
 
   //create investment graph
-  this.graphInvestment = function(neighbourhoods, lats, longs, prices, availability, districtListings) {
+  this.graphInvestment = function(neighbourhoods, prices, availabilityNextNinetyDays, districtListings) {
     google.charts.load('current', {
       'packages': ['corechart']
     });
     google.charts.setOnLoadCallback(drawChart);
-
-    var allOptions = [];
-    var allButtons = [];
 
     var options = {
       title: 'Long Term AirBnB Investment in ',
@@ -53223,59 +53220,176 @@ module.exports = function() {
         easing: 'out'
       }
     };
+
+    //used TrustedChoice example of a P-to-R ratio of 16.7 (purchasing price to annual rent)
+    //find most profitable listings in each neighbourhood, up to 100 mil
+    //do it later bruh
+
+    /* get the average cost to buy a listing in every neighbourhood */
+
+    //initiate variables
+    var avgNeighbourhoodPurchasingPrice = [];
+    var numListingsPerNeighbourhood = [];
     for (var i = 0; i < neighbourhoods.length; i++) {
-      options['title'] = 'Long Term AirBnB Investment in ' + neighbourhoods[i];
-      allOptions.push(options);
+      avgNeighbourhoodPurchasingPrice[i] = 0;
+      numListingsPerNeighbourhood[i] = 0;
     }
 
-    var completeData = [];
-    //used TrustedChoice example of a P-to-R ratio of 16.7 (purchasing price to annual rent)
-    for (var j = 0; j < lats.length; j++) {
+    //1. get total
+    for (var i = 0; i < districtListings.length; i++) {
+      for (var j = 0; j < neighbourhoods.length; j++) {
+        if (districtListings[i] == neighbourhoods[j]) {
 
-      //help
-      if (districtListings[i] == neighbourhoods[i]) {
+          var purchasingPrice = 16.7 * prices[i] * 365;
+          avgNeighbourhoodPurchasingPrice[j] += purchasingPrice;
 
+          numListingsPerNeighbourhood[j]++;
+          j = neighbourhoods.length;
+        }
       }
+    }
+
+    //2. calculate average
+    for (var i = 0; i < neighbourhoods.length; i++) {
+      avgNeighbourhoodPurchasingPrice[i] /= numListingsPerNeighbourhood[i];
+    }
+
+    console.log("get investment average cost");
+
+    /* get the average annual profit of a listing in every neighbourhood */
+
+    //initiate variables
+    var avgNeighbourhoodAnnualProfitPerListing = [];
+    for (var i = 0; i < neighbourhoods.length; i++)
+      avgNeighbourhoodAnnualProfitPerListing.push(0);
+
+    //1. get total profit
+    for (var i = 0; i < districtListings.length; i++) {
+      for (var j = 0; j < neighbourhoods.length; j++) {
+        if (districtListings[i] == neighbourhoods[j]) {
+
+          var avgProfitInADay = prices[i] * (90 - availabilityNextNinetyDays[i]) / 90;
+          avgNeighbourhoodAnnualProfitPerListing[j] += avgProfitInADay * 365;
+
+          j = neighbourhoods.length;
+        }
+      }
+    }
+
+    //2. calculate average profit
+    for (var i = 0; i < neighbourhoods.length; i++)
+      avgNeighbourhoodAnnualProfitPerListing[i] /= numListingsPerNeighbourhood[i];
+
+    console.log("get investment average profit of listings");
+
+    /* get the number of listings you can buy, and hence amount of profit, you could make with 100 million in each neighbourhood per Year */
+
+    var amntOfMoneyLeftPerNeighbourhood = [];
+    var amntOfPurchasableListingsPerNeighbourhood = [];
+    for (var i = 0; i < neighbourhoods.length; i++) {
+      amntOfMoneyLeftPerNeighbourhood.push(startingInvestmentCash); //100 mil baby
+      amntOfPurchasableListingsPerNeighbourhood.push(0);
+    }
+
+    for (var i = 0; i < neighbourhoods.length; i++) {
+      while (amntOfMoneyLeftPerNeighbourhood[i] - avgNeighbourhoodPurchasingPrice[i] > 0) {
+        amntOfMoneyLeftPerNeighbourhood[i] -= avgNeighbourhoodPurchasingPrice[i];
+        amntOfPurchasableListingsPerNeighbourhood[i] += 1;
+      }
+    }
+
+    console.log("get investment average profit of investment");
+
+    /* calculate it over the next 30 years until profit is made, with random minor changes in profit every year */
+
+    //initial cost and revenue
+    var revenuePerNeighbourhoodPerYear = Array.apply(null, new Array(neighbourhoods.length)).map(
+      Array.prototype.valueOf,
+      Array.apply(null, new Array(40)).map(
+        function() {
+          return 0;
+        }
+      )
+    );
+    var expensesPerNeighbourhoodPerYear = Array.apply(null, new Array(neighbourhoods.length)).map(
+      Array.prototype.valueOf,
+      Array.apply(null, new Array(40)).map(
+        function() {
+          return 0;
+        }
+      )
+    );
+
+    for (var i = 0; i < neighbourhoods.length; i++) {
+      revenuePerNeighbourhoodPerYear[i][0] = amntOfPurchasableListingsPerNeighbourhood[i] * avgNeighbourhoodAnnualProfitPerListing[i];
+      expensesPerNeighbourhoodPerYear[i][0] = startingInvestmentCash - amntOfMoneyLeftPerNeighbourhood[i];
+    }
+
+    for (var i = 0; i < neighbourhoods.length; i++) {
+
+      for (var j = 1; j < revenuePerNeighbourhoodPerYear[i].length; j++) { //todo: add taxes
+
+        //multiply by a random deviant of a small percent (+-5%), for randomness' sake
+        var deviant = Math.floor(Math.random() * 5) / 100;
+        var gainOrLoss = Math.floor(Math.random() * 2);
+        if (gainOrLoss != 1)
+          gainOrLoss = -1;
+        deviant = 1 + deviant * gainOrLoss;
+
+        //use first year's earnings as standard/average
+        revenuePerNeighbourhoodPerYear[i][j] = revenuePerNeighbourhoodPerYear[i][0] * deviant + revenuePerNeighbourhoodPerYear[i][j - 1];
+      }
+
+      for (var j = 1; j < expensesPerNeighbourhoodPerYear[i].length; j++) {
+
+        //multiply by a random deviant of a small percent (+-5%), for randomness' sake
+        var deviant = Math.floor(Math.random() * 5) / 100;
+        var gainOrLoss = Math.floor(Math.random() * 2);
+        if (gainOrLoss != 1)
+          gainOrLoss = -1;
+        deviant = 1 + deviant * gainOrLoss;
+
+        //approx $120 in cleaning cost per booking; https://www.homeadvisor.com/cost/cleaning-services/, and about a week average stay per booking
+        var numBookings = (90 - availabilityNextNinetyDays[j]) * 90 / 365 / 7;
+        expensesPerNeighbourhoodPerYear[i][j] = amntOfPurchasableListingsPerNeighbourhood[i] * 120 * numBookings * deviant;
+      }
+    }
+
+    console.log(revenuePerNeighbourhoodPerYear[5][0] == revenuePerNeighbourhoodPerYear[16][0]);
+
+    console.log("finish storing investment data");
+
+    var completeData = [];
+    var formatted = [];
+    for (var i = 0; i < neighbourhoods.length; i++) {
+      formatted = [];
+      formatted.push(['Year', 'Revenue', 'Expenses']);
+
+      for (var j = 0; j < revenuePerNeighbourhoodPerYear[i].length; j++) {
+        var currYear = 2017 + j;
+        formatted.push([currYear + '', revenuePerNeighbourhoodPerYear[i][j], expensesPerNeighbourhoodPerYear[i][j]]);
+      }
+      completeData.push(formatted);
     }
 
     function drawChart() {
 
-      //make buttons for every district
-      if (!buttonsCreated) {
-
-        //button 'i' relates to neighbourhood 'i', who's data is stored in completeData's 'i'
-        for (var i = 0; i < neighbourhoods.length; i++) {
-          var btn = document.createElement('button');
-          btn.className = 'button small';
-          var label = document.createTextNode(neighbourhoods[i].substring(0, 8)); //lucky 8
-          btn.appendChild(label);
-          document.getElementById('buttons').appendChild(btn);
-
-          allButtons.push(btn);
-        }
-
-        buttonsCreated = true;
-      }
-
+      var button = document.getElementById('nextDistrict');
       var chart = new google.visualization.AreaChart(document.getElementById('chart_div'));
-      /*var data = google.visualization.arrayToDataTable(completeData[currAxisInvest]);
+      var data = google.visualization.arrayToDataTable(completeData[currNeighbourhoodInvest]);
 
-      for (var i = 0; i < allButtons.length; i++) {
-        allButtons[i].onclick = function() {
-          drawSeriesChart();
-        }
+      button.disabled = true;
+      google.visualization.events.addListener(chart, 'ready',
+        function() {
+          button.disabled = false;
+        });
+
+      button.onclick = function() {
+        currNeighbourhoodInvest = (currNeighbourhoodInvest + 1) % neighbourhoods.length;
+        data = google.visualization.arrayToDataTable(completeData[currNeighbourhoodInvest]);
+        options['title'] = 'Long Term AirBnB Investment in ' + neighbourhoods[currNeighbourhoodInvest] + '';
+        drawChart();
       }
-
-      chart.draw(data, allOptions[currAxisInvest]);*/
-
-      var data = google.visualization.arrayToDataTable([
-        ['Year', 'Sales', 'Expenses'],
-        ['2013', 1000, 400],
-        ['2014', 1170, 460],
-        ['2015', 660, 1120],
-        ['2016', 1030, 540]
-      ]);
-
       chart.draw(data, options);
     }
   }
@@ -54272,39 +54386,31 @@ global.setImmediate = require('timers').setImmediate;
 
 require('./jquery.csv.js');
 
-request.get('https://raw.githubusercontent.com/henryyc/air-list/master/data/calendar.csv', function(error, response, body) {
+request.get('https://raw.githubusercontent.com/henryyc/air-list/master/data/neighbourhoods.csv', function(error, response, body) {
   if (!error && response.statusCode == 200) {
-    neighbours();
+
+    var csv = require("fast-csv");
+    var heatmapData = [];
+
+    var CSV_STRING = body;
+    var xAxis = [];
+    var i = 0;
+
+    console.log("neighbourhod data start");
+    csv
+      .fromString(CSV_STRING, {
+        headers: true
+      })
+      .on("data", function(data) {
+        xAxis.push(data["neighbourhood"]);
+      })
+      .on("end", function() {
+
+        console.log("neighbourhod data sent");
+        listingsPrice(xAxis);
+      });
   }
 });
-
-function neighbours() {
-  request.get('https://raw.githubusercontent.com/henryyc/air-list/master/data/neighbourhoods.csv', function(error, response, body) {
-    if (!error && response.statusCode == 200) {
-
-      var csv = require("fast-csv");
-      var heatmapData = [];
-
-      var CSV_STRING = body;
-      var xAxis = [];
-      var i = 0;
-
-      console.log("neighbourhod data start");
-      csv
-        .fromString(CSV_STRING, {
-          headers: true
-        })
-        .on("data", function(data) {
-          xAxis.push(data["neighbourhood"]);
-        })
-        .on("end", function() {
-
-          console.log("neighbourhod data sent");
-          listingsPrice(xAxis);
-        });
-    }
-  });
-}
 
 function listingsPrice(xAxis) {
   request.get('https://raw.githubusercontent.com/henryyc/air-list/master/data/listing_info_split.csv', function(error, response, body) {
@@ -54356,7 +54462,7 @@ function listingsPrice(xAxis) {
           availability.push(ava);
 
           //find neighbourhoods
-          for(var i = 0; i < xAxis.length; i++) {
+          for (var i = 0; i < xAxis.length; i++) {
 
             if (district == xAxis[i]) {
 
@@ -54377,20 +54483,10 @@ function listingsPrice(xAxis) {
 
           graphPopularity(xAxis, numListings, numBooked);
 
-          graphInvestment(xAxis, lats, longs, prices, availability, districtListings);
+          graphInvestment(xAxis, prices, availability, districtListings);
 
           console.log("price data sent");
-          listingsInfo(listings, neighbourhoods);
         });
-    }
-  });
-}
-
-function listingsInfo(listings, neighbourhoods) {
-  request.get('https://raw.githubusercontent.com/henryyc/air-list/master/data/lat_long_info.csv', function(error, response, body) {
-    if (!error && response.statusCode == 200) {
-
-      console.log("ok");
     }
   });
 }

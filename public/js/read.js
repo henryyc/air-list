@@ -10,39 +10,31 @@ global.setImmediate = require('timers').setImmediate;
 
 require('./jquery.csv.js');
 
-request.get('https://raw.githubusercontent.com/henryyc/air-list/master/data/calendar.csv', function(error, response, body) {
+request.get('https://raw.githubusercontent.com/henryyc/air-list/master/data/neighbourhoods.csv', function(error, response, body) {
   if (!error && response.statusCode == 200) {
-    neighbours();
+
+    var csv = require("fast-csv");
+    var heatmapData = [];
+
+    var CSV_STRING = body;
+    var xAxis = [];
+    var i = 0;
+
+    console.log("neighbourhod data start");
+    csv
+      .fromString(CSV_STRING, {
+        headers: true
+      })
+      .on("data", function(data) {
+        xAxis.push(data["neighbourhood"]);
+      })
+      .on("end", function() {
+
+        console.log("neighbourhod data sent");
+        listingsPrice(xAxis);
+      });
   }
 });
-
-function neighbours() {
-  request.get('https://raw.githubusercontent.com/henryyc/air-list/master/data/neighbourhoods.csv', function(error, response, body) {
-    if (!error && response.statusCode == 200) {
-
-      var csv = require("fast-csv");
-      var heatmapData = [];
-
-      var CSV_STRING = body;
-      var xAxis = [];
-      var i = 0;
-
-      console.log("neighbourhod data start");
-      csv
-        .fromString(CSV_STRING, {
-          headers: true
-        })
-        .on("data", function(data) {
-          xAxis.push(data["neighbourhood"]);
-        })
-        .on("end", function() {
-
-          console.log("neighbourhod data sent");
-          listingsPrice(xAxis);
-        });
-    }
-  });
-}
 
 function listingsPrice(xAxis) {
   request.get('https://raw.githubusercontent.com/henryyc/air-list/master/data/listing_info_split.csv', function(error, response, body) {
@@ -94,7 +86,7 @@ function listingsPrice(xAxis) {
           availability.push(ava);
 
           //find neighbourhoods
-          for(var i = 0; i < xAxis.length; i++) {
+          for (var i = 0; i < xAxis.length; i++) {
 
             if (district == xAxis[i]) {
 
@@ -115,20 +107,10 @@ function listingsPrice(xAxis) {
 
           graphPopularity(xAxis, numListings, numBooked);
 
-          graphInvestment(xAxis, lats, longs, prices, availability, districtListings);
+          graphInvestment(xAxis, prices, availability, districtListings);
 
           console.log("price data sent");
-          listingsInfo(listings, neighbourhoods);
         });
-    }
-  });
-}
-
-function listingsInfo(listings, neighbourhoods) {
-  request.get('https://raw.githubusercontent.com/henryyc/air-list/master/data/lat_long_info.csv', function(error, response, body) {
-    if (!error && response.statusCode == 200) {
-
-      console.log("ok");
     }
   });
 }

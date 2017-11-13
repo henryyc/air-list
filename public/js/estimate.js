@@ -34,7 +34,6 @@ function calculateCost() {
   var myLat = place.geometry.location.lat();
   var myLong = place.geometry.location.lng();
 
-  var dailyRate = 0;
   var weeklyRevenue = 0;
 
   var averagePriceRate = 0;
@@ -62,21 +61,22 @@ function calculateCost() {
       var profitMade = numberOfBookedDays * otherPrices[i];
       var averageProfitPerDay = profitMade / 90;
 
-      //average how much each listing makes in a week, then average for all listings
-      weeklyRevenue += averageProfitPerDay * 7;
+      //sum up how much each listing makes in a week, then at the end, average it for all listings
+      //airbnb charges a 3% host service fee per booking
+      //from skimming the data, I just estimated an average of around a week per booking, so .97^1 = .97; http://rentingyourplace.com/airbnb-101/pricing/to-fee-or-not-to-fee/
+      weeklyRevenue += (averageProfitPerDay * 7) * 0.97;
 
       numListings++;
 
-      //to maximize profit from daily rent: find the top 10 richest listings in competitive distance, and rent 10% less than them
-      
+      //to maximize profit from daily rent: rent 10% less than average
+      averagePriceRate += otherPrices[i];
     }
   }
 
-  dailyRate *= 0.75;
-  console.log(weeklyRevenue);
   weeklyRevenue /= numListings;
+  averagePriceRate /= numListings;
 
-  document.getElementById("tablePrice").innerHTML = '$' + parseFloat(Math.round(dailyRate * 100) / 100).toFixed(2);
+  document.getElementById("tablePrice").innerHTML = '$' + parseFloat(Math.round(averagePriceRate * 100) / 100).toFixed(2);
   document.getElementById("tablePriceTwo").innerHTML = '$' + parseFloat(Math.round(weeklyRevenue * 100) / 100).toFixed(2);
 }
 
