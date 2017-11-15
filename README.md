@@ -23,3 +23,10 @@ Features
 
 3. Bookings Optimization:
     * Find other listings within 1 km distance, and charge 10% below the average price rate.
+
+Code
+======
+* Used NodeJS for server
+* Created with Heroku
+* Used JavaScript, HTML, and CSS for frontend
+* Also used browserify on some of the node.js code to let it be run client-side
